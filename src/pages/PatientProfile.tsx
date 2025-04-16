@@ -8,6 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -31,7 +32,7 @@ import {
   Building,
   History,
   HeartPulse,
-  IdCard,  // Replacing ID with IdCard
+  IdCard,  // Using IdCard instead of ID
 } from "lucide-react";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { CaseList } from "@/components/dashboard/CaseList";
@@ -853,4 +854,4 @@ const PatientProfile = () => {
               <CardDescription>Record of patient hospital/clinic visits</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="
