@@ -11,8 +11,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Activity,
@@ -21,15 +19,14 @@ import {
   ClipboardList,
   Home,
   LogOut,
-  Search,
   Settings,
   UserCircle,
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 type NavItem = {
   title: string;
