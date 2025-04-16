@@ -1,22 +1,27 @@
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { Search } from "lucide-react";
 import { useState } from "react";
 import { PatientList } from "@/components/dashboard/PatientList";
 import { useNavigate } from "react-router-dom";
+import { PatientSearch, PatientSearchFilters } from "@/components/patient/PatientSearch";
+import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
 
 const PatientManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchFilters, setSearchFilters] = useState<PatientSearchFilters>({
+    searchBy: "all"
+  });
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = (query: string, filters: PatientSearchFilters) => {
+    setSearchQuery(query);
+    setSearchFilters(filters);
+    
     toast({
       title: "Searching for patients",
-      description: `Query: ${searchQuery}`,
+      description: `Query: ${query} (Filter: ${filters.searchBy})`,
     });
     // In a real application, this would filter the patients list
   };
@@ -95,6 +100,8 @@ const PatientManagement = () => {
 
   return (
     <div className="space-y-6">
+      <BackNavigationHeader title="Patient Management" />
+      
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Patient Management</h1>
@@ -105,18 +112,7 @@ const PatientManagement = () => {
         <Button>Add Patient</Button>
       </div>
 
-      <form onSubmit={handleSearch}>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search by CRN, name, contact number, email, or National Health ID..."
-            className="pl-10"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </form>
+      <PatientSearch onSearch={handleSearch} />
 
       <div className="bg-white rounded-lg border">
         <PatientList

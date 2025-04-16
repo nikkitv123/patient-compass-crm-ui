@@ -25,11 +25,20 @@ import {
   Settings,
   UserCircle,
   Users,
+  // Admin icons
+  UserCog,
+  Shield,
+  Bell,
+  FileText,
+  Megaphone,
+  List,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useLogoutConfirmation } from "@/hooks/useLogoutConfirmation";
 
 type NavItem = {
   title: string;
@@ -65,26 +74,59 @@ const primaryNavItems: NavItem[] = [
   },
 ];
 
-const secondaryNavItems: NavItem[] = [
+// Administration items for admin users only
+const adminNavItems: NavItem[] = [
   {
-    title: "Administration",
+    title: "Doctor Management",
+    icon: UserCog,
+    url: "/admin/doctors",
+  },
+  {
+    title: "Team Management",
+    icon: Shield,
+    url: "/admin/teams",
+  },
+  {
+    title: "Notifications",
+    icon: Bell,
+    url: "/admin/notifications",
+  },
+  {
+    title: "Templates",
+    icon: FileText,
+    url: "/admin/templates",
+  },
+  {
+    title: "Case Config",
+    icon: List,
+    url: "/admin/case-config",
+  },
+  {
+    title: "SLA Rules",
+    icon: Clock,
+    url: "/admin/sla-rules",
+  },
+  {
+    title: "System Settings",
     icon: Settings,
-    url: "/admin",
+    url: "/admin/settings",
   },
 ];
 
 export function SidebarNav() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const [activeItem, setActiveItem] = useState<string>("/");
+  const { showLogoutConfirmation } = useLogoutConfirmation();
+  
+  // Set initial active item based on current location
+  const [activeItem, setActiveItem] = useState<string>(location.pathname);
+  
+  // Mock user type - in a real app, this would come from authentication
+  const isAdmin = false; // Toggle this to true to see admin view
 
   const handleLogout = () => {
-    toast({
-      title: "Logging out...",
-      description: "You have been logged out successfully.",
-    });
-    // In a real application, this would call an API to logout
-    // navigate('/login');
+    showLogoutConfirmation();
   };
 
   const handleNavigation = (url: string) => {
@@ -126,26 +168,28 @@ export function SidebarNav() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Administration</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {secondaryNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    className={cn(
-                      isActive(item.url) && "bg-sidebar-accent text-white"
-                    )}
-                    onClick={() => handleNavigation(item.url)}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminNavItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      className={cn(
+                        isActive(item.url) && "bg-sidebar-accent text-white"
+                      )}
+                      onClick={() => handleNavigation(item.url)}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-3">

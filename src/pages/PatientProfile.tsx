@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -22,13 +21,72 @@ import {
   Phone, 
   Star,
   Clock,
+  FileText,
+  Download,
+  User,
+  FileCheck,
+  ThumbsUp,
+  Stethoscope,
+  Building,
+  History,
+  HeartPulse,
+  ID,
 } from "lucide-react";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { CaseList } from "@/components/dashboard/CaseList";
 import { Separator } from "@/components/ui/separator";
+import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { 
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 
 const PatientProfile = () => {
   const { id } = useParams<{ id: string }>();
+  const { toast } = useToast();
+  
+  // State for modal visibility
+  const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
+  const [isRescheduleDialogOpen, setIsRescheduleDialogOpen] = useState(false);
+  const [isNotesDialogOpen, setIsNotesDialogOpen] = useState(false);
+  const [isCreateCaseDialogOpen, setIsCreateCaseDialogOpen] = useState(false);
+  const [isEditPreferencesDialogOpen, setIsEditPreferencesDialogOpen] = useState(false);
 
   // Mock patient data for demonstration
   const patient = {
@@ -41,6 +99,7 @@ const PatientProfile = () => {
     email: "sarah.johnson@example.com",
     address: "123 Main Street, Anytown, USA",
     medicalRecordNumber: "MRN-98765",
+    healthId: "NHI-5432109", // Added health ID
     insuranceProvider: "BlueCross Health",
     insurancePolicyNumber: "BC-567890",
     primaryPhysician: "Dr. Robert Chen",
@@ -114,6 +173,7 @@ const PatientProfile = () => {
     },
   ];
 
+  // Mock data for the new tabs
   const interactions = [
     {
       id: "i1",
@@ -184,6 +244,7 @@ const PatientProfile = () => {
       provider: "Dr. Robert Chen",
       department: "Cardiology",
       status: "Completed",
+      notes: "Patient is recovering well from surgery. Blood pressure is now within normal range. Prescribed continued medication and scheduled a follow-up in one month."
     },
     {
       id: "a3",
@@ -192,6 +253,7 @@ const PatientProfile = () => {
       provider: "Dr. Elizabeth Lee",
       department: "Surgery",
       status: "Completed",
+      notes: "Coronary artery bypass grafting performed successfully. Patient tolerated the procedure well. No immediate complications."
     },
   ];
   
@@ -202,6 +264,7 @@ const PatientProfile = () => {
       type: "Clinical Note",
       provider: "Dr. Robert Chen",
       summary: "Post-surgery follow-up. Patient recovering well with expected progress.",
+      details: "Patient reports mild discomfort at incision site but no signs of infection. Vital signs stable. Cardiac function improving based on latest echocardiogram."
     },
     {
       id: "m2",
@@ -209,6 +272,7 @@ const PatientProfile = () => {
       type: "Procedure Note",
       provider: "Dr. Elizabeth Lee",
       summary: "Coronary artery bypass grafting. Procedure completed successfully without complications.",
+      details: "Triple bypass performed using left internal mammary artery and saphenous vein grafts. Total bypass time: 112 minutes. Patient transferred to ICU in stable condition."
     },
     {
       id: "m3",
@@ -216,6 +280,7 @@ const PatientProfile = () => {
       type: "Lab Results",
       provider: "Dr. Robert Chen",
       summary: "Pre-surgery blood work and diagnostics. All values within acceptable ranges for procedure.",
+      details: "Complete blood count, metabolic panel, coagulation studies, and cardiac enzymes reviewed. All parameters acceptable for scheduled procedure."
     },
     {
       id: "m4",
@@ -223,8 +288,79 @@ const PatientProfile = () => {
       type: "Clinical Note",
       provider: "Dr. Robert Chen",
       summary: "Initial consultation for coronary artery disease. Recommended CABG procedure.",
+      details: "Patient presents with stable angina, unresponsive to medical therapy. Cardiac catheterization shows significant three-vessel disease. CABG recommended as optimal treatment strategy."
     },
   ];
+
+  const visitHistory = [
+    {
+      id: "v1",
+      date: "March 15, 2023",
+      type: "Outpatient",
+      department: "Cardiology",
+      provider: "Dr. Robert Chen",
+      summary: "Post-surgery follow-up visit",
+      details: "Patient recovering well. Medication adjusted."
+    },
+    {
+      id: "v2",
+      date: "February 1-8, 2023",
+      type: "Inpatient",
+      department: "Cardiothoracic Surgery",
+      provider: "Dr. Elizabeth Lee",
+      summary: "Coronary artery bypass grafting",
+      details: "Successful triple bypass surgery. 7-day hospital stay."
+    },
+    {
+      id: "v3",
+      date: "January 10, 2023",
+      type: "Outpatient",
+      department: "Cardiology",
+      provider: "Dr. Robert Chen",
+      summary: "Consultation",
+      details: "Initial consultation for coronary artery disease."
+    },
+  ];
+
+  const feedbackHistory = [
+    {
+      id: "f1",
+      date: "March 16, 2023",
+      type: "Post-Visit Survey",
+      overallScore: 4.5,
+      submittedFor: "Cardiology Visit (March 15, 2023)",
+      responses: [
+        { question: "How would you rate your overall experience?", answer: "4/5" },
+        { question: "Was the doctor attentive to your concerns?", answer: "5/5" },
+        { question: "How would you rate the facility cleanliness?", answer: "4/5" },
+        { question: "How likely are you to recommend us to family or friends?", answer: "5/5" },
+        { question: "Any additional comments?", answer: "Dr. Chen was very thorough and explained everything clearly." }
+      ]
+    },
+    {
+      id: "f2",
+      date: "February 10, 2023",
+      type: "Inpatient Experience",
+      overallScore: 4.0,
+      submittedFor: "Hospital Stay (February 1-8, 2023)",
+      responses: [
+        { question: "How would you rate your overall hospital stay?", answer: "4/5" },
+        { question: "How would you rate the nursing care?", answer: "5/5" },
+        { question: "How would you rate the food quality?", answer: "3/5" },
+        { question: "How well was your pain managed?", answer: "4/5" },
+        { question: "Any suggestions for improvement?", answer: "The food could be better, but the care was excellent." }
+      ]
+    }
+  ];
+
+  // Function to download appointment notes as PDF
+  const downloadNotes = (appointmentId: string) => {
+    // In a real app, this would generate and download a PDF
+    toast({
+      title: "PDF Download Started",
+      description: "Your appointment notes are being downloaded.",
+    });
+  };
 
   const getInteractionIcon = (type: string) => {
     switch (type) {
@@ -244,9 +380,46 @@ const PatientProfile = () => {
         return <Clock className="h-4 w-4 text-gray-500" />;
     }
   };
+  
+  // Handle creating a new case
+  const handleCreateCase = () => {
+    toast({
+      title: "Case Created",
+      description: "New case has been created successfully.",
+    });
+    setIsCreateCaseDialogOpen(false);
+  };
+
+  // Handle scheduling/rescheduling an appointment
+  const handleScheduleAppointment = () => {
+    toast({
+      title: "Appointment Scheduled",
+      description: "The appointment has been scheduled successfully.",
+    });
+    setIsAppointmentDialogOpen(false);
+  };
+  
+  const handleRescheduleAppointment = () => {
+    toast({
+      title: "Appointment Rescheduled",
+      description: "The appointment has been rescheduled successfully.",
+    });
+    setIsRescheduleDialogOpen(false);
+  };
+  
+  // Handle updating patient preferences
+  const handleUpdatePreferences = () => {
+    toast({
+      title: "Preferences Updated",
+      description: "Patient preferences have been updated successfully.",
+    });
+    setIsEditPreferencesDialogOpen(false);
+  };
 
   return (
     <div className="space-y-6">
+      <BackNavigationHeader title="Patient Profile" />
+
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
@@ -264,8 +437,18 @@ const PatientProfile = () => {
                 </Badge>
               )}
             </h1>
-            <div className="text-muted-foreground">
-              CRN: {patient.crn} • DOB: {patient.dateOfBirth} • MRN: {patient.medicalRecordNumber}
+            <div className="text-muted-foreground space-x-2">
+              <span>CRN: {patient.crn}</span>
+              <span>•</span>
+              <span>DOB: {patient.dateOfBirth}</span>
+              <span>•</span>
+              <span>MRN: {patient.medicalRecordNumber}</span>
+              <span>•</span>
+              <span className="flex items-center"><ID className="h-3 w-3 mr-1" /> Health ID: {patient.healthId}</span>
+            </div>
+            <div className="text-muted-foreground flex gap-3 mt-1">
+              <span className="flex items-center"><Phone className="h-3 w-3 mr-1" /> {patient.contactNumber}</span>
+              <span className="flex items-center"><Mail className="h-3 w-3 mr-1" /> {patient.email}</span>
             </div>
           </div>
         </div>
@@ -278,7 +461,7 @@ const PatientProfile = () => {
             <Mail className="h-4 w-4 mr-2" />
             Email
           </Button>
-          <Button>
+          <Button onClick={() => setIsCreateCaseDialogOpen(true)}>
             <ClipboardList className="h-4 w-4 mr-2" />
             Create Case
           </Button>
@@ -293,6 +476,8 @@ const PatientProfile = () => {
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
           <TabsTrigger value="appointments">Appointments</TabsTrigger>
           <TabsTrigger value="medical">Medical</TabsTrigger>
+          <TabsTrigger value="visits">Visit History</TabsTrigger>
+          <TabsTrigger value="feedback">Feedback</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
         </TabsList>
 
@@ -327,6 +512,10 @@ const PatientProfile = () => {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Address:</span>
                   <span className="font-medium">{patient.address}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Health ID:</span>
+                  <span className="font-medium">{patient.healthId}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Registration Date:</span>
@@ -457,7 +646,7 @@ const PatientProfile = () => {
                 <CardTitle>Patient Cases</CardTitle>
                 <CardDescription>All cases associated with {patient.name}</CardDescription>
               </div>
-              <Button>
+              <Button onClick={() => setIsCreateCaseDialogOpen(true)}>
                 <ClipboardList className="h-4 w-4 mr-2" />
                 Create Case
               </Button>
@@ -528,7 +717,9 @@ const PatientProfile = () => {
                 <CardTitle>Patient Appointments</CardTitle>
                 <CardDescription>Upcoming and past appointments</CardDescription>
               </div>
-              <Button>Schedule Appointment</Button>
+              <Button onClick={() => setIsAppointmentDialogOpen(true)}>
+                Schedule Appointment
+              </Button>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -550,7 +741,9 @@ const PatientProfile = () => {
                             <Badge>{appointment.status}</Badge>
                           </div>
                           <div className="flex gap-2 mt-3">
-                            <Button variant="outline" size="sm">Reschedule</Button>
+                            <Button variant="outline" size="sm" onClick={() => setIsRescheduleDialogOpen(true)}>
+                              Reschedule
+                            </Button>
                             <Button variant="outline" size="sm">Cancel</Button>
                           </div>
                         </div>
@@ -576,7 +769,15 @@ const PatientProfile = () => {
                           <Badge variant="outline">{appointment.status}</Badge>
                         </div>
                         <div className="flex gap-2 mt-3">
-                          <Button variant="outline" size="sm">View Notes</Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              setIsNotesDialogOpen(true);
+                            }}
+                          >
+                            View Notes
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -607,7 +808,33 @@ const PatientProfile = () => {
                           {record.date} • {record.provider}
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">View Details</Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">View Details</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{record.type} - {record.date}</DialogTitle>
+                            <DialogDescription>Provider: {record.provider}</DialogDescription>
+                          </DialogHeader>
+                          <div className="mt-4 space-y-4">
+                            <div>
+                              <h4 className="text-sm font-medium">Summary</h4>
+                              <p className="mt-1">{record.summary}</p>
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-medium">Details</h4>
+                              <p className="mt-1">{record.details}</p>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => downloadNotes(record.id)}>
+                              <Download className="h-4 w-4 mr-2" />
+                              Download PDF
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                 ))}
@@ -619,92 +846,12 @@ const PatientProfile = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="preferences">
+        <TabsContent value="visits">
           <Card>
             <CardHeader>
-              <CardTitle>Patient Preferences</CardTitle>
-              <CardDescription>Communication and personal preferences</CardDescription>
+              <CardTitle>Visit History</CardTitle>
+              <CardDescription>Record of patient hospital/clinic visits</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <h3 className="font-semibold mb-3">Communication Preferences</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Preferred Contact Method:</span>
-                      <span className="font-medium">{patient.preferredContactMethod}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Preferred Language:</span>
-                      <span className="font-medium">{patient.preferredLanguage}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Email Notifications:</span>
-                      <Badge variant="outline" className="bg-healthcare-success text-white">
-                        Enabled
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">SMS Notifications:</span>
-                      <Badge variant="outline" className="bg-healthcare-success text-white">
-                        Enabled
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Phone Calls:</span>
-                      <Badge variant="outline" className="bg-healthcare-success text-white">
-                        Enabled
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="font-semibold mb-3">Special Requirements</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Accessibility Needs:</span>
-                      <span className="font-medium">None</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Dietary Restrictions:</span>
-                      <span className="font-medium">Low Sodium Diet</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Religious Preferences:</span>
-                      <span className="font-medium">None specified</span>
-                    </div>
-                  </div>
-
-                  <h3 className="font-semibold mb-3 mt-6">Privacy Settings</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Share Medical Info with Family:</span>
-                      <Badge variant="outline" className="bg-healthcare-danger text-white">
-                        Disabled
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Allow Research Participation:</span>
-                      <Badge variant="outline" className="bg-healthcare-success text-white">
-                        Enabled
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end">
-                <Button>
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Preferences
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default PatientProfile;
+              <div className="space-y-4">
+                {visitHistory.map(visit => (
