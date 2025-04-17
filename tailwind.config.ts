@@ -64,16 +64,16 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				// Healthcare specific colors
-				'healthcare-primary': '#4C7FAF',
-				'healthcare-secondary': '#4CB4A4',
-				'healthcare-accent': '#5DADE2',
-				'healthcare-light': '#EEF5FC',
-				'healthcare-dark': '#2C4D73',
+				'healthcare-primary': '#6BAA75',
+				'healthcare-secondary': '#D4B996',
+				'healthcare-accent': '#86B48F',
+				'healthcare-light': '#F5F9F6',
+				'healthcare-dark': '#3D6144',
 				'healthcare-success': '#28A745',
 				'healthcare-warning': '#FFC107',
 				'healthcare-danger': '#DC3545',
 				'healthcare-emergency': '#B71C1C',
-				'patient-vip': '#FFD700',
+				'patient-vip': '#D4B996',
 				'patient-highrisk': '#DC3545',
 			},
 			borderRadius: {

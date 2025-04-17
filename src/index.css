@@ -1,11 +1,10 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 210 30% 98%;
+    --background: 60 30% 98%;
     --foreground: 215 25% 27%;
 
     --card: 0 0% 100%;
@@ -14,77 +13,77 @@
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 27%;
 
-    --primary: 210 40% 49%;
+    --primary: 133 24% 54%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 174 40% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 36 36% 71%;
+    --secondary-foreground: 24 10% 10%;
 
-    --muted: 210 20% 96%;
+    --muted: 36 20% 96%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 174 40% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 36 36% 71%;
+    --accent-foreground: 24 10% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 20% 90%;
-    --input: 214 20% 90%;
-    --ring: 215 25% 27%;
+    --border: 36 20% 90%;
+    --input: 36 20% 90%;
+    --ring: 133 24% 54%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 210 45% 22%;
+    --sidebar-background: 133 24% 36%;
     --sidebar-foreground: 0 0% 100%;
 
-    --sidebar-primary: 210 40% 49%;
+    --sidebar-primary: 133 24% 54%;
     --sidebar-primary-foreground: 0 0% 100%;
 
-    --sidebar-accent: 210 45% 30%;
+    --sidebar-accent: 133 24% 30%;
     --sidebar-accent-foreground: 0 0% 100%;
 
-    --sidebar-border: 210 45% 18%;
-    --sidebar-ring: 210 40% 49%;
+    --sidebar-border: 133 24% 30%;
+    --sidebar-ring: 133 24% 54%;
   }
 
   .dark {
-    --background: 222 25% 12%;
-    --foreground: 210 15% 90%;
+    --background: 210 25% 12%;
+    --foreground: 36 15% 90%;
 
-    --card: 222 25% 14%;
-    --card-foreground: 210 15% 90%;
+    --card: 210 25% 14%;
+    --card-foreground: 36 15% 90%;
 
-    --popover: 222 25% 14%;
-    --popover-foreground: 210 15% 90%;
+    --popover: 210 25% 14%;
+    --popover-foreground: 36 15% 90%;
 
-    --primary: 210 40% 49%;
+    --primary: 133 24% 54%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 174 40% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 36 36% 71%;
+    --secondary-foreground: 24 10% 10%;
 
-    --muted: 217 25% 25%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 210 25% 25%;
+    --muted-foreground: 36 15% 65%;
 
-    --accent: 174 40% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 36 36% 71%;
+    --accent-foreground: 24 10% 10%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 25% 26%;
-    --input: 217 25% 26%;
-    --ring: 212 26% 70%;
+    --border: 210 25% 26%;
+    --input: 210 25% 26%;
+    --ring: 133 24% 54%;
     
-    --sidebar-background: 210 45% 15%;
-    --sidebar-foreground: 210 15% 90%;
-    --sidebar-primary: 210 40% 49%;
+    --sidebar-background: 133 24% 25%;
+    --sidebar-foreground: 36 15% 90%;
+    --sidebar-primary: 133 24% 54%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 45% 20%;
-    --sidebar-accent-foreground: 210 15% 90%;
-    --sidebar-border: 210 45% 12%;
-    --sidebar-ring: 210 40% 49%;
+    --sidebar-accent: 133 24% 20%;
+    --sidebar-accent-foreground: 36 15% 90%;
+    --sidebar-border: 133 24% 15%;
+    --sidebar-ring: 133 24% 54%;
   }
 }
 
@@ -136,4 +135,3 @@
 .high-risk-badge {
   @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-patient-highrisk text-white;
 }
-

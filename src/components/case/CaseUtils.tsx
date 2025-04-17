@@ -7,7 +7,7 @@ export const getStatusBadge = (status: string) => {
     case "open":
       return <Badge className="bg-healthcare-accent text-white font-medium px-2.5 py-1">Open</Badge>;
     case "in-progress":
-      return <Badge className="bg-healthcare-secondary text-white font-medium px-2.5 py-1">In Progress</Badge>;
+      return <Badge className="bg-healthcare-secondary text-healthcare-dark font-medium px-2.5 py-1">In Progress</Badge>;
     case "pending":
       return <Badge className="bg-healthcare-warning text-black font-medium px-2.5 py-1">Pending</Badge>;
     case "resolved":
