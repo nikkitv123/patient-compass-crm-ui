@@ -18,54 +18,54 @@ export const SLAStatusCard = ({ sla }: SLAStatusProps) => {
     switch (sla.status) {
       case "on-track":
         return (
-          <div className="space-y-1">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-healthcare-success" />
+              <CheckCircle2 className="h-5 w-5 text-healthcare-success" />
               <span className="text-healthcare-success font-medium">
                 On Track
               </span>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground ml-auto">
                 {sla.timeRemaining}
               </span>
             </div>
             <Progress
               value={sla.progress}
-              className="h-2 bg-muted"
+              className="h-2 bg-gray-100"
               indicatorClassName="bg-healthcare-success"
             />
           </div>
         );
       case "at-risk":
         return (
-          <div className="space-y-1">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-healthcare-warning" />
+              <AlertCircle className="h-5 w-5 text-healthcare-warning" />
               <span className="text-healthcare-warning font-medium">
                 At Risk
               </span>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground ml-auto">
                 {sla.timeRemaining}
               </span>
             </div>
             <Progress
               value={sla.progress}
-              className="h-2 bg-muted"
+              className="h-2 bg-gray-100"
               indicatorClassName="bg-healthcare-warning"
             />
           </div>
         );
       case "breached":
         return (
-          <div className="space-y-1">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-healthcare-danger" />
+              <AlertTriangle className="h-5 w-5 text-healthcare-danger" />
               <span className="text-healthcare-danger font-medium">
                 SLA Breached
               </span>
             </div>
             <Progress
               value={100}
-              className="h-2 bg-muted"
+              className="h-2 bg-gray-100"
               indicatorClassName="bg-healthcare-danger"
             />
           </div>
@@ -76,14 +76,15 @@ export const SLAStatusCard = ({ sla }: SLAStatusProps) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>SLA Status</CardTitle>
+    <Card className="shadow-card hover:shadow-card-hover transition-shadow">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold">SLA Status</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0">
         {getSLAIndicator()}
-        <div className="mt-2 text-xs text-muted-foreground">
-          Target: {sla.target}
+        <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
+          <Clock className="h-4 w-4" />
+          <span>Target: {sla.target}</span>
         </div>
       </CardContent>
     </Card>

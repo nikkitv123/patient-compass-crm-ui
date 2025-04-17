@@ -64,17 +64,17 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				// Healthcare specific colors
-				'healthcare-primary': '#0056B3',
-				'healthcare-secondary': '#0E86D4',
-				'healthcare-accent': '#68C3E5',
-				'healthcare-light': '#E1F1FA',
-				'healthcare-dark': '#003B6F',
-				'healthcare-success': '#43A047',
-				'healthcare-warning': '#FF9800',
-				'healthcare-danger': '#D32F2F',
+				'healthcare-primary': '#4C7FAF',
+				'healthcare-secondary': '#4CB4A4',
+				'healthcare-accent': '#5DADE2',
+				'healthcare-light': '#EEF5FC',
+				'healthcare-dark': '#2C4D73',
+				'healthcare-success': '#28A745',
+				'healthcare-warning': '#FFC107',
+				'healthcare-danger': '#DC3545',
 				'healthcare-emergency': '#B71C1C',
 				'patient-vip': '#FFD700',
-				'patient-highrisk': '#FF4E4E',
+				'patient-highrisk': '#DC3545',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -122,7 +122,14 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite'
-			}
+			},
+			boxShadow: {
+				'card': '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
+				'card-hover': '0 3px 6px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.15)',
+			},
+			fontFamily: {
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
