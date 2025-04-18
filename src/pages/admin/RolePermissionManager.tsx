@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
