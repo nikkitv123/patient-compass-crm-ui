@@ -1,11 +1,11 @@
 
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
-import { PatientList } from "@/components/dashboard/PatientList";
-import { useNavigate } from "react-router-dom";
 import { PatientSearch, PatientSearchFilters } from "@/components/patient/PatientSearch";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { PatientList } from "@/components/dashboard/PatientList";
 import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
+import { AddPatientDialog } from "@/components/patient/AddPatientDialog";
 
 const PatientManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -109,7 +109,7 @@ const PatientManagement = () => {
             Search, view, and manage patient profiles
           </p>
         </div>
-        <Button>Add Patient</Button>
+        <AddPatientDialog />
       </div>
 
       <PatientSearch onSearch={handleSearch} />
