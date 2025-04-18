@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Shield, Users, Grip, Plus, Minus, Save } from "lucide-react";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
@@ -38,9 +38,12 @@ const SortablePermissionItem = ({ permission }: SortablePermissionItemProps) => 
       style={style}
       {...attributes}
       {...listeners}
-      className="p-3 mb-2 bg-white dark:bg-gray-800 rounded-md border shadow-sm cursor-move flex items-center justify-between"
+      className="p-4 mb-2 bg-white dark:bg-gray-800 rounded-lg border shadow-sm cursor-move hover:shadow-md transition-all duration-200 flex items-center justify-between group"
     >
-      <span>{permission.name}</span>
+      <div className="flex items-center gap-3">
+        <Grip className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        <span className="font-medium">{permission.name}</span>
+      </div>
     </div>
   );
 };
@@ -137,31 +140,38 @@ export default function RolePermissionManager() {
 
   return (
     <RoleGuard allowedRoles="admin" fallback={<div>You do not have permission to access this page.</div>}>
-      <div className="p-6">
+      <div className="p-6 max-w-7xl mx-auto">
         <BackNavigationHeader title="Role Permission Manager" />
         <div className="flex justify-between items-center mt-6">
           <div>
-            <h1 className="text-3xl font-bold">Role Permission Manager</h1>
+            <div className="flex items-center gap-2">
+              <Shield className="w-8 h-8 text-primary" />
+              <h1 className="text-3xl font-bold">Role Permission Manager</h1>
+            </div>
             <p className="text-muted-foreground mt-2">
               Configure permissions for different user roles
             </p>
           </div>
-          <Button onClick={saveChanges}>Save Changes</Button>
+          <Button onClick={saveChanges} size="lg" className="gap-2">
+            <Save className="w-4 h-4" />
+            Save Changes
+          </Button>
         </div>
 
-        <div className="mt-6">
-          <Tabs defaultValue="crm_user" onValueChange={(value) => setSelectedRole(value as UserRole)}>
-            <TabsList className="w-full border-b">
+        <div className="mt-8">
+          <Tabs defaultValue="crm_user" onValueChange={(value) => setSelectedRole(value as UserRole)} className="w-full">
+            <TabsList className="w-full border-b mb-6 bg-background">
               {Object.entries(roleDescriptions).map(([role, description]) => (
-                <TabsTrigger key={role} value={role} className="flex-1">
+                <TabsTrigger key={role} value={role} className="flex-1 gap-2 py-3">
+                  <Users className="w-4 h-4" />
                   {description.title}
                 </TabsTrigger>
               ))}
             </TabsList>
             {Object.entries(roleDescriptions).map(([role, description]) => (
-              <TabsContent key={role} value={role}>
-                <div className="mt-4">
-                  <h2 className="text-xl font-semibold mb-2">{description.title}</h2>
+              <TabsContent key={role} value={role} className="mt-0">
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold">{description.title}</h2>
                   <p className="text-muted-foreground">{description.description}</p>
                 </div>
                 
@@ -171,18 +181,21 @@ export default function RolePermissionManager() {
                   onDragEnd={handleDragEnd}
                   modifiers={[restrictToVerticalAxis]}
                 >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Assigned Permissions */}
-                    <Card>
+                    <Card className="border-2">
                       <CardHeader>
-                        <CardTitle>Assigned Permissions</CardTitle>
+                        <CardTitle className="flex items-center gap-2">
+                          <Shield className="w-5 h-5 text-primary" />
+                          Assigned Permissions
+                        </CardTitle>
                         <p className="text-sm text-muted-foreground">
                           Drag to reorder or remove permissions
                         </p>
                       </CardHeader>
                       <CardContent 
                         id="assigned-permissions-container"
-                        className="min-h-[300px] border border-dashed rounded-md p-4"
+                        className="min-h-[400px] border-2 border-dashed rounded-lg p-4 transition-colors hover:border-primary/50"
                       >
                         <SortableContext 
                           items={assignedPermissions.map(p => p.id)} 
@@ -196,17 +209,21 @@ export default function RolePermissionManager() {
                           ))}
                         </SortableContext>
                         {assignedPermissions.length === 0 && (
-                          <div className="h-full flex items-center justify-center text-muted-foreground">
-                            No permissions assigned
+                          <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-2">
+                            <Minus className="w-8 h-8" />
+                            <p>No permissions assigned</p>
                           </div>
                         )}
                       </CardContent>
                     </Card>
 
                     {/* Available Permissions */}
-                    <Card>
+                    <Card className="border-2">
                       <CardHeader>
-                        <CardTitle>Available Permissions</CardTitle>
+                        <CardTitle className="flex items-center gap-2">
+                          <Plus className="w-5 h-5 text-primary" />
+                          Available Permissions
+                        </CardTitle>
                         <div className="relative mt-2">
                           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input
@@ -219,7 +236,7 @@ export default function RolePermissionManager() {
                       </CardHeader>
                       <CardContent 
                         id="available-permissions-container"
-                        className="min-h-[300px] border border-dashed rounded-md p-4"
+                        className="min-h-[400px] border-2 border-dashed rounded-lg p-4 transition-colors hover:border-primary/50"
                       >
                         <SortableContext 
                           items={filteredAvailablePermissions.map(p => p.id)} 
@@ -233,8 +250,9 @@ export default function RolePermissionManager() {
                           ))}
                         </SortableContext>
                         {filteredAvailablePermissions.length === 0 && (
-                          <div className="h-full flex items-center justify-center text-muted-foreground">
-                            {searchTerm ? "No matching permissions" : "No additional permissions available"}
+                          <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-2">
+                            <Search className="w-8 h-8" />
+                            <p>{searchTerm ? "No matching permissions" : "No additional permissions available"}</p>
                           </div>
                         )}
                       </CardContent>
