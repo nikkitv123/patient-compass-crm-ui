@@ -39,11 +39,19 @@ import { useState } from "react";
 import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useLogoutConfirmation } from "@/hooks/useLogoutConfirmation";
+import { useUser } from "@/contexts/UserContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type NavItem = {
   title: string;
   icon: React.ElementType;
   url: string;
+  roles?: Array<"admin" | "crm_user" | "doctor" | "marketing">;
 };
 
 const primaryNavItems: NavItem[] = [
@@ -51,26 +59,31 @@ const primaryNavItems: NavItem[] = [
     title: "Dashboard",
     icon: Home,
     url: "/",
+    roles: ["admin", "crm_user", "doctor", "marketing"],
   },
   {
     title: "Patients",
     icon: Users,
     url: "/patients",
+    roles: ["admin", "crm_user", "doctor"],
   },
   {
     title: "Cases",
     icon: ClipboardList,
     url: "/cases",
+    roles: ["admin", "crm_user"],
   },
   {
     title: "Tasks",
     icon: Calendar,
     url: "/tasks",
+    roles: ["admin", "crm_user"],
   },
   {
     title: "Reporting",
     icon: BarChart3,
     url: "/reporting",
+    roles: ["admin", "marketing"],
   },
 ];
 
@@ -80,36 +93,43 @@ const adminNavItems: NavItem[] = [
     title: "Doctor Management",
     icon: UserCog,
     url: "/admin/doctors",
+    roles: ["admin"],
   },
   {
     title: "Team Management",
     icon: Shield,
     url: "/admin/teams",
+    roles: ["admin"],
   },
   {
     title: "Notifications",
     icon: Bell,
     url: "/admin/notifications",
+    roles: ["admin"],
   },
   {
     title: "Templates",
     icon: FileText,
     url: "/admin/templates",
+    roles: ["admin"],
   },
   {
     title: "Case Config",
     icon: List,
     url: "/admin/case-config",
+    roles: ["admin"],
   },
   {
     title: "SLA Rules",
     icon: Clock,
     url: "/admin/sla-rules",
+    roles: ["admin"],
   },
   {
     title: "System Settings",
     icon: Settings,
     url: "/admin/settings",
+    roles: ["admin"],
   },
 ];
 
@@ -118,12 +138,10 @@ export function SidebarNav() {
   const location = useLocation();
   const { toast } = useToast();
   const { showLogoutConfirmation } = useLogoutConfirmation();
+  const { currentUser, switchUser, hasPermission } = useUser();
   
   // Set initial active item based on current location
   const [activeItem, setActiveItem] = useState<string>(location.pathname);
-  
-  // Mock user type - in a real app, this would come from authentication
-  const isAdmin = false; // Toggle this to true to see admin view
 
   const handleLogout = () => {
     showLogoutConfirmation();
@@ -135,6 +153,18 @@ export function SidebarNav() {
   };
 
   const isActive = (url: string) => activeItem === url;
+
+  // Filter navigation items based on user role
+  const filteredPrimaryNavItems = primaryNavItems.filter(
+    (item) => !item.roles || hasPermission(item.roles)
+  );
+
+  const filteredAdminNavItems = adminNavItems.filter(
+    (item) => !item.roles || hasPermission(item.roles)
+  );
+
+  // Only show admin section if user has access to at least one admin item
+  const showAdminSection = filteredAdminNavItems.length > 0;
 
   return (
     <Sidebar>
@@ -151,7 +181,7 @@ export function SidebarNav() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {primaryNavItems.map((item) => (
+              {filteredPrimaryNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     className={cn(
@@ -168,12 +198,12 @@ export function SidebarNav() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {isAdmin && (
+        {showAdminSection && (
           <SidebarGroup>
             <SidebarGroupLabel>Administration</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {adminNavItems.map((item) => (
+                {filteredAdminNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={cn(
@@ -197,18 +227,45 @@ export function SidebarNav() {
           <div className="flex items-center">
             <UserCircle className="h-8 w-8 text-white" />
             <div className="ml-2">
-              <div className="text-sm font-semibold text-white">Dr. Jane Smith</div>
-              <div className="text-xs text-sidebar-foreground/80">Cardiologist</div>
+              <div className="text-sm font-semibold text-white">{currentUser.name}</div>
+              <div className="text-xs text-sidebar-foreground/80">{currentUser.position}</div>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
-            onClick={handleLogout}
-          >
-            <LogOut className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                >
+                  <Settings className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => switchUser("crm")}>
+                  Switch to CRM User
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => switchUser("doctor")}>
+                  Switch to Doctor
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => switchUser("marketing")}>
+                  Switch to Marketing
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => switchUser("admin")}>
+                  Switch to Admin
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>

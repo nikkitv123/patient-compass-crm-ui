@@ -6,6 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { PatientList } from "@/components/dashboard/PatientList";
 import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
 import { AddPatientDialog } from "@/components/patient/AddPatientDialog";
+import { RoleGuard } from "@/components/auth/RoleGuard";
+import { useUser } from "@/contexts/UserContext";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const PatientManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,6 +18,7 @@ const PatientManagement = () => {
   });
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { currentUser } = useUser();
 
   const handleSearch = (query: string, filters: PatientSearchFilters) => {
     setSearchQuery(query);
@@ -109,8 +114,22 @@ const PatientManagement = () => {
             Search, view, and manage patient profiles
           </p>
         </div>
-        <AddPatientDialog />
+        
+        {/* Only CRM users and admins can add patients */}
+        <RoleGuard allowedRoles={["admin", "crm_user"]}>
+          <AddPatientDialog />
+        </RoleGuard>
       </div>
+
+      {currentUser.role === "marketing" && (
+        <Alert className="bg-yellow-50 border-yellow-200">
+          <AlertCircle className="h-4 w-4 text-yellow-600" />
+          <AlertTitle>Limited Access</AlertTitle>
+          <AlertDescription>
+            Marketing users have view-only access to patient data for reporting purposes.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <PatientSearch onSearch={handleSearch} />
 
