@@ -1,6 +1,12 @@
 
 export type UserRole = "admin" | "crm_user" | "doctor" | "marketing";
 
+export interface Permission {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -8,4 +14,5 @@ export interface User {
   role: UserRole;
   position: string;
   avatar?: string;
+  permissions?: string[]; // For custom permission sets beyond role defaults
 }

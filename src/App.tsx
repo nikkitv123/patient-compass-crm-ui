@@ -24,6 +24,7 @@ import NotificationTemplates from "./pages/admin/NotificationTemplates";
 import CaseConfig from "./pages/admin/CaseConfig";
 import SLARules from "./pages/admin/SLARules";
 import SystemSettings from "./pages/admin/SystemSettings";
+import RolePermissionManager from "./pages/admin/RolePermissionManager";
 
 const queryClient = new QueryClient();
 
@@ -112,6 +113,11 @@ const App = () => (
               <Route path="/admin/settings" element={
                 <AppLayout>
                   <SystemSettings />
+                </AppLayout>
+              } />
+              <Route path="/admin/role-permissions" element={
+                <AppLayout>
+                  <RolePermissionManager />
                 </AppLayout>
               } />
               

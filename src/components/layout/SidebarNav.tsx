@@ -33,6 +33,7 @@ import {
   Megaphone,
   List,
   Clock,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -123,6 +124,12 @@ const adminNavItems: NavItem[] = [
     title: "SLA Rules",
     icon: Clock,
     url: "/admin/sla-rules",
+    roles: ["admin"],
+  },
+  {
+    title: "Role Permissions",
+    icon: UserPlus,
+    url: "/admin/role-permissions",
     roles: ["admin"],
   },
   {
