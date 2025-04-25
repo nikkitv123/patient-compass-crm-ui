@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -20,6 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { Eye, PencilIcon, Plus } from "lucide-react";
 
 interface Task {
   id: string;
@@ -46,13 +47,13 @@ interface Task {
 const TaskManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real application, this would filter the tasks list
   };
 
-  // Mock data for demonstration purposes
   const myTasks: Task[] = [
     {
       id: "t1",
@@ -232,10 +233,20 @@ const TaskManagement = () => {
             </div>
 
             <div className="flex gap-2 mt-3">
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate(`/tasks/${task.id}/edit`)}
+              >
+                <PencilIcon className="h-4 w-4 mr-2" />
                 Edit
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate(`/tasks/${task.id}`)}
+              >
+                <Eye className="h-4 w-4 mr-2" />
                 View Details
               </Button>
             </div>
@@ -254,7 +265,10 @@ const TaskManagement = () => {
             Track and manage your tasks and team tasks
           </p>
         </div>
-        <Button>Create Task</Button>
+        <Button onClick={() => navigate("/tasks/create")}>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Task
+        </Button>
       </div>
 
       <Tabs defaultValue="my-tasks">
