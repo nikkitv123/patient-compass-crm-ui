@@ -25,10 +25,6 @@ import SLARules from "./pages/admin/SLARules";
 import SystemSettings from "./pages/admin/SystemSettings";
 import RolePermissionManager from "./pages/admin/RolePermissionManager";
 
-import CreateTask from "./pages/task/CreateTask";
-import EditTask from "./pages/task/EditTask";
-import ViewTask from "./pages/task/ViewTask";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -65,26 +61,13 @@ const App = () => (
                   <CaseDetail />
                 </AppLayout>
               } />
+              
               <Route path="/tasks" element={
                 <AppLayout>
                   <TaskManagement />
                 </AppLayout>
               } />
-              <Route path="/tasks/create" element={
-                <AppLayout>
-                  <CreateTask />
-                </AppLayout>
-              } />
-              <Route path="/tasks/:id" element={
-                <AppLayout>
-                  <ViewTask />
-                </AppLayout>
-              } />
-              <Route path="/tasks/:id/edit" element={
-                <AppLayout>
-                  <EditTask />
-                </AppLayout>
-              } />
+              
               <Route path="/reporting" element={
                 <AppLayout>
                   <Reporting />
