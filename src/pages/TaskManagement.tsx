@@ -46,16 +46,6 @@ interface Task {
 
 const TaskManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [dialogState, setDialogState] = useState<{
-    mode: "create" | "edit" | "view";
-    open: boolean;
-    taskId?: string;
-    initialData?: any;
-  }>({
-    mode: "create",
-    open: false,
-  });
-  
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -191,24 +181,6 @@ const TaskManagement = () => {
     });
   };
 
-  const handleCreateTask = (data: any) => {
-    console.log("Creating task:", data);
-    toast({
-      title: "Task created",
-      description: "The task has been created successfully.",
-    });
-    setDialogState((prev) => ({ ...prev, open: false }));
-  };
-
-  const handleEditTask = (data: any) => {
-    console.log("Updating task:", data);
-    toast({
-      title: "Task updated",
-      description: "The task has been updated successfully.",
-    });
-    setDialogState((prev) => ({ ...prev, open: false }));
-  };
-
   const TaskItem = ({ task }: { task: Task }) => {
     return (
       <div className="border-b last:border-0 px-6 py-4">
@@ -264,15 +236,7 @@ const TaskManagement = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => setDialogState({
-                  mode: "edit",
-                  open: true,
-                  taskId: task.id,
-                  initialData: {
-                    ...task,
-                    dueDate: new Date(task.dueDate),
-                  },
-                })}
+                onClick={() => navigate(`/tasks/${task.id}/edit`)}
               >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit
@@ -280,12 +244,7 @@ const TaskManagement = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => setDialogState({
-                  mode: "view",
-                  open: true,
-                  taskId: task.id,
-                  initialData: task,
-                })}
+                onClick={() => navigate(`/tasks/${task.id}`)}
               >
                 <Eye className="h-4 w-4 mr-2" />
                 View Details
@@ -306,7 +265,7 @@ const TaskManagement = () => {
             Track and manage your tasks and team tasks
           </p>
         </div>
-        <Button onClick={() => setDialogState({ mode: "create", open: true })}>
+        <Button onClick={() => navigate("/tasks/create")}>
           <Plus className="h-4 w-4 mr-2" />
           Create Task
         </Button>
