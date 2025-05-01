@@ -21,13 +21,25 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { toFHIRTask } from "@/lib/fhir/types";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const taskFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   priority: z.enum(["high", "medium", "low"]),
   status: z.enum(["open", "in-progress", "completed"]),
-  dueDate: z.string().min(1, "Due date is required"),
+  dueDate: z.date({
+    required_error: "Due date is required",
+  }),
   patientId: z.string().optional(),
   caseId: z.string().optional(),
   assigneeId: z.string().min(1, "Assignee is required"),
@@ -51,7 +63,7 @@ export function TaskForm({ initialData, onSubmit, isEditing = false }: TaskFormP
       description: initialData?.description || "",
       priority: initialData?.priority || "medium",
       status: initialData?.status || "open",
-      dueDate: initialData?.dueDate || "",
+      dueDate: initialData?.dueDate ? new Date(initialData.dueDate) : new Date(),
       patientId: initialData?.patientId || "",
       caseId: initialData?.caseId || "",
       assigneeId: initialData?.assigneeId || "",
@@ -59,7 +71,22 @@ export function TaskForm({ initialData, onSubmit, isEditing = false }: TaskFormP
   });
 
   const handleSubmit = (data: TaskFormValues) => {
+    // Convert to FHIR format for API submissions
+    const fhirTask = toFHIRTask({
+      ...data,
+      id: initialData?.id,
+      createdAt: new Date().toISOString(),
+      patientName: data.patientId === "p1" ? "Sarah Johnson" : 
+                   data.patientId === "p2" ? "Michael Williams" : 
+                   data.patientId === "p3" ? "David Brown" : "",
+      assigneeName: data.assigneeId === "u1" ? "Dr. Jane Smith" : 
+                    data.assigneeId === "u2" ? "Dr. Robert Chen" : 
+                    data.assigneeId === "u3" ? "Nurse Wilson" : ""
+    });
+    
+    console.log('FHIR Task Object:', fhirTask);
     onSubmit(data);
+    
     toast({
       title: `Task ${isEditing ? "updated" : "created"} successfully`,
       description: `The task has been ${isEditing ? "updated" : "created"}.`,
@@ -149,11 +176,49 @@ export function TaskForm({ initialData, onSubmit, isEditing = false }: TaskFormP
           control={form.control}
           name="dueDate"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Due Date</FormLabel>
-              <FormControl>
-                <Input type="datetime-local" {...field} />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP p")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    initialFocus
+                  />
+                  <div className="p-3 border-t">
+                    <Input
+                      type="time"
+                      value={field.value ? format(field.value, "HH:mm") : ""}
+                      onChange={(e) => {
+                        const [hours, minutes] = e.target.value.split(':');
+                        const newDate = new Date(field.value);
+                        newDate.setHours(parseInt(hours, 10));
+                        newDate.setMinutes(parseInt(minutes, 10));
+                        field.onChange(newDate);
+                      }}
+                    />
+                  </div>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
