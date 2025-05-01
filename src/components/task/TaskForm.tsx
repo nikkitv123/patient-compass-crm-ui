@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -47,8 +46,9 @@ const taskFormSchema = z.object({
 
 type TaskFormValues = z.infer<typeof taskFormSchema>;
 
+// Update interface to include id property
 interface TaskFormProps {
-  initialData?: Partial<TaskFormValues>;
+  initialData?: Partial<TaskFormValues> & { id?: string }; // Added id property here
   onSubmit: (data: TaskFormValues) => void;
   isEditing?: boolean;
 }
