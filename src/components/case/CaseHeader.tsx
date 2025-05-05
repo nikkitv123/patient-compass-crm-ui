@@ -1,9 +1,11 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, Edit } from "lucide-react";
 import { getStatusBadge, getPriorityBadge } from "@/components/case/CaseUtils";
+import { EditCaseDialog } from "@/components/case/EditCaseDialog";
 
 interface CaseHeaderProps {
   caseData: {
@@ -15,10 +17,13 @@ interface CaseHeaderProps {
     type: string;
     subType: string;
     createdDate: string;
+    description?: string;
   };
 }
 
 export const CaseHeader = ({ caseData }: CaseHeaderProps) => {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   return (
     <div>
       <div className="flex items-center text-sm text-muted-foreground mb-2">
@@ -43,12 +48,18 @@ export const CaseHeader = ({ caseData }: CaseHeaderProps) => {
         </div>
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <Button variant="outline">Update Status</Button>
-          <Button>
+          <Button onClick={() => setEditDialogOpen(true)}>
             <Edit className="h-4 w-4 mr-2" />
             Edit Case
           </Button>
         </div>
       </div>
+
+      <EditCaseDialog 
+        caseData={caseData} 
+        open={editDialogOpen} 
+        onOpenChange={setEditDialogOpen} 
+      />
     </div>
   );
 };
