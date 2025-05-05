@@ -192,7 +192,10 @@ const CaseDetail = () => {
           <SLAStatusCard sla={caseData.sla} />
           <PatientInfoCard patient={caseData.patient} />
           <AssigneeCard assignee={caseData.assignee} />
-          <QuickActionsCard />
+          <QuickActionsCard 
+            caseData={{ id: caseData.id, caseId: caseData.caseId }}
+            patient={caseData.patient}
+          />
         </div>
       </div>
     </div>
