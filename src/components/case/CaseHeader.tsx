@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronRight, Edit } from "lucide-react";
 import { getStatusBadge, getPriorityBadge } from "@/components/case/CaseUtils";
 import { EditCaseDialog } from "@/components/case/EditCaseDialog";
+import { UpdateStatusDialog } from "@/components/case/UpdateStatusDialog";
 
 interface CaseHeaderProps {
   caseData: {
@@ -23,6 +24,7 @@ interface CaseHeaderProps {
 
 export const CaseHeader = ({ caseData }: CaseHeaderProps) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
 
   return (
     <div>
@@ -47,7 +49,7 @@ export const CaseHeader = ({ caseData }: CaseHeaderProps) => {
           </div>
         </div>
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-          <Button variant="outline">Update Status</Button>
+          <Button variant="outline" onClick={() => setStatusDialogOpen(true)}>Update Status</Button>
           <Button onClick={() => setEditDialogOpen(true)}>
             <Edit className="h-4 w-4 mr-2" />
             Edit Case
@@ -59,6 +61,12 @@ export const CaseHeader = ({ caseData }: CaseHeaderProps) => {
         caseData={caseData} 
         open={editDialogOpen} 
         onOpenChange={setEditDialogOpen} 
+      />
+
+      <UpdateStatusDialog
+        caseData={caseData}
+        open={statusDialogOpen}
+        onOpenChange={setStatusDialogOpen}
       />
     </div>
   );
