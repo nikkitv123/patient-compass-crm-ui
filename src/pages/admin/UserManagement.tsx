@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
 import {
@@ -56,7 +55,7 @@ interface UserData {
   email: string;
   role: UserRole;
   position: string;
-  status: string;
+  status: "active" | "inactive"; // Explicitly define the status type
   lastLogin: string;
 }
 
@@ -122,6 +121,9 @@ const userFormSchema = z.object({
   }),
 });
 
+// Define a type for the form data
+type UserFormData = z.infer<typeof userFormSchema>;
+
 const UserManagement = () => {
   const [users, setUsers] = useState<UserData[]>(mockUsers);
   const [searchTerm, setSearchTerm] = useState("");
@@ -133,7 +135,7 @@ const UserManagement = () => {
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof userFormSchema>>({
+  const form = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
       name: "",
@@ -157,14 +159,14 @@ const UserManagement = () => {
     return matchesSearchTerm && matchesRole && matchesStatus;
   });
 
-  const handleAddUser = (data: z.infer<typeof userFormSchema>) => {
+  const handleAddUser = (data: UserFormData) => {
     const newUser: UserData = {
       id: (users.length + 1).toString(),
       name: data.name,
       email: data.email,
       role: data.role,
       position: data.position,
-      status: data.status,
+      status: data.status, // Now properly typed as "active" | "inactive"
       lastLogin: new Date().toISOString(),
     };
     setUsers([...users, newUser]);
@@ -188,7 +190,7 @@ const UserManagement = () => {
     setAddUserDialogOpen(true);
   };
 
-  const handleUpdateUser = (data: z.infer<typeof userFormSchema>) => {
+  const handleUpdateUser = (data: UserFormData) => {
     if (!editUser) return;
     
     const updatedUsers = users.map((user) =>
@@ -384,8 +386,8 @@ const UserManagement = () => {
                                     ...u,
                                     status:
                                       u.status === "active"
-                                        ? "inactive"
-                                        : "active",
+                                        ? "inactive" as const
+                                        : "active" as const,
                                   }
                                 : u
                             );
