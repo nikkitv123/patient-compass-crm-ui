@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import {
   Sidebar,
@@ -21,6 +20,7 @@ import {
   ClipboardList,
   Home,
   LogOut,
+  MessageCircle,
   Search,
   Settings,
   UserCircle,
@@ -79,6 +79,12 @@ const primaryNavItems: NavItem[] = [
     icon: Calendar,
     url: "/tasks",
     roles: ["admin", "crm_user"],
+  },
+  {
+    title: "Messages",
+    icon: MessageCircle,
+    url: "/messages",
+    roles: ["admin", "crm_user", "doctor", "marketing"],
   },
   {
     title: "Reporting",

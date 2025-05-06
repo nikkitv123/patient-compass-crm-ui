@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,7 @@ import PatientProfile from "./pages/PatientProfile";
 import CaseManagement from "./pages/CaseManagement";
 import CaseDetail from "./pages/CaseDetail";
 import TaskManagement from "./pages/TaskManagement";
+import Messages from "./pages/Messages";
 import Reporting from "./pages/Reporting";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "next-themes";
@@ -83,6 +85,11 @@ const App = () => (
               <Route path="/tasks/:id/edit" element={
                 <AppLayout>
                   <EditTask />
+                </AppLayout>
+              } />
+              <Route path="/messages" element={
+                <AppLayout>
+                  <Messages />
                 </AppLayout>
               } />
               <Route path="/reporting" element={
