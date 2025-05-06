@@ -15,15 +15,51 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { useUser } from "@/contexts/UserContext";
+import { MessageDialog } from "@/components/messaging/MessageDialog";
+import { useNavigate } from "react-router-dom";
 
 export function TopBar() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
+  const [selectedRecipient, setSelectedRecipient] = useState<any>(null);
+  const { currentUser } = useUser();
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
     // In a real application, would navigate to search results or filter current view
   };
+
+  const handleOpenMessageDialog = (recipient: any) => {
+    setSelectedRecipient(recipient);
+    setMessageDialogOpen(true);
+  };
+
+  const handleViewAllMessages = () => {
+    navigate("/messages");
+  };
+
+  // Mock recipients for quick messaging
+  const recentContacts = [
+    {
+      id: "dr-chen",
+      name: "Dr. Robert Chen",
+      role: "doctor" as const,
+      position: "Cardiologist",
+      lastMessage: "Patient follow-up required for case #1234",
+      timestamp: "10 minutes ago"
+    },
+    {
+      id: "nurse-wilson",
+      name: "Nurse Wilson",
+      role: "crm_user" as const,
+      position: "Head Nurse",
+      lastMessage: "Updated lab results for patient Maria Garcia",
+      timestamp: "2 hours ago"
+    }
+  ];
 
   return (
     <div className="h-16 border-b bg-white flex items-center justify-between px-6">
@@ -51,24 +87,21 @@ export function TopBar() {
           <DropdownMenuContent align="end" className="w-80">
             <div className="p-2 font-medium">Messages</div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-3 cursor-pointer">
-              <div>
-                <p className="font-medium">Dr. Robert Chen</p>
-                <p className="text-sm text-muted-foreground line-clamp-1">
-                  Patient follow-up required for case #1234
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">10 minutes ago</p>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="p-3 cursor-pointer">
-              <div>
-                <p className="font-medium">Nurse Wilson</p>
-                <p className="text-sm text-muted-foreground line-clamp-1">
-                  Updated lab results for patient Maria Garcia
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
-              </div>
-            </DropdownMenuItem>
+            {recentContacts.map(contact => (
+              <DropdownMenuItem 
+                key={contact.id}
+                className="p-3 cursor-pointer"
+                onClick={() => handleOpenMessageDialog(contact)}
+              >
+                <div>
+                  <p className="font-medium">{contact.name}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {contact.lastMessage}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">{contact.timestamp}</p>
+                </div>
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuItem className="p-3 cursor-pointer">
               <div>
                 <p className="font-medium">System Notification</p>
@@ -79,7 +112,10 @@ export function TopBar() {
               </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-center text-sm font-medium text-healthcare-primary cursor-pointer">
+            <DropdownMenuItem 
+              className="text-center text-sm font-medium text-healthcare-primary cursor-pointer"
+              onClick={handleViewAllMessages}
+            >
               View All Messages
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -152,6 +188,16 @@ export function TopBar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Message Dialog */}
+      {selectedRecipient && (
+        <MessageDialog
+          open={messageDialogOpen}
+          onOpenChange={setMessageDialogOpen}
+          currentUser={currentUser}
+          recipient={selectedRecipient}
+        />
+      )}
     </div>
   );
 }

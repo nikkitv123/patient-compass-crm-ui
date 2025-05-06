@@ -1,12 +1,13 @@
 
 import { useState, useRef, useEffect } from "react";
-import { SendHorizonal, PaperclipIcon, SmileIcon, UserCircle } from "lucide-react";
+import { SendHorizonal, PaperclipIcon, SmileIcon, UserCircle, ScrollIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { User, UserRole } from "@/types/user";
 import { useToast } from "@/components/ui/use-toast";
 import { roleDescriptions } from "@/docs/RoleDescriptions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Message structure
 interface Message {
@@ -133,52 +134,54 @@ export function MessageThread({ currentUser, recipient }: MessageThreadProps) {
       </div>
       
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => {
-          const isCurrentUser = message.sender === currentUser.id;
-          
-          return (
-            <div 
-              key={message.id}
-              className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
-            >
+      <ScrollArea className="flex-1">
+        <div className="p-4 space-y-4">
+          {messages.map((message) => {
+            const isCurrentUser = message.sender === currentUser.id;
+            
+            return (
               <div 
-                className={`max-w-[80%] p-3 rounded-lg ${
-                  isCurrentUser 
-                    ? "bg-healthcare-primary text-white" 
-                    : "bg-gray-100"
-                }`}
+                key={message.id}
+                className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
               >
-                <div className="text-sm">{message.text}</div>
                 <div 
-                  className={`text-xs mt-1 ${
-                    isCurrentUser ? "text-white/80" : "text-muted-foreground"
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    isCurrentUser 
+                      ? "bg-healthcare-primary text-white" 
+                      : "bg-gray-100"
                   }`}
                 >
-                  {formatMessageTime(message.timestamp)}
-                </div>
-                
-                {message.attachments && (
-                  <div className="mt-2 space-y-1">
-                    {message.attachments.map((file, i) => (
-                      <div 
-                        key={i}
-                        className={`text-xs flex items-center gap-1 p-1 rounded ${
-                          isCurrentUser ? "bg-white/20" : "bg-white"
-                        }`}
-                      >
-                        <PaperclipIcon className="h-3 w-3" />
-                        {file.name}
-                      </div>
-                    ))}
+                  <div className="text-sm">{message.text}</div>
+                  <div 
+                    className={`text-xs mt-1 ${
+                      isCurrentUser ? "text-white/80" : "text-muted-foreground"
+                    }`}
+                  >
+                    {formatMessageTime(message.timestamp)}
                   </div>
-                )}
+                  
+                  {message.attachments && (
+                    <div className="mt-2 space-y-1">
+                      {message.attachments.map((file, i) => (
+                        <div 
+                          key={i}
+                          className={`text-xs flex items-center gap-1 p-1 rounded ${
+                            isCurrentUser ? "bg-white/20" : "bg-white"
+                          }`}
+                        >
+                          <PaperclipIcon className="h-3 w-3" />
+                          {file.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef} />
-      </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
       
       {/* Message input */}
       <div className="border-t p-3">
