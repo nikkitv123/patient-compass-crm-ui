@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 import {
   Sidebar,
@@ -96,6 +97,12 @@ const primaryNavItems: NavItem[] = [
 
 // Administration items for admin users only
 const adminNavItems: NavItem[] = [
+  {
+    title: "User Management",
+    icon: Users,
+    url: "/admin/users",
+    roles: ["admin"],
+  },
   {
     title: "Doctor Management",
     icon: UserCog,
