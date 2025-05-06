@@ -26,7 +26,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -50,13 +49,24 @@ import * as z from "zod";
 import { Search, UserPlus, Edit, Trash2, UserCheck, UserX } from "lucide-react";
 import { UserRole } from "@/types/user";
 
+// Define a type for the user
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  position: string;
+  status: string;
+  lastLogin: string;
+}
+
 // Mock user data - in a real app, this would come from an API
-const mockUsers = [
+const mockUsers: UserData[] = [
   {
     id: "1",
     name: "Alice Johnson",
     email: "alice@example.com",
-    role: "admin" as UserRole,
+    role: "admin",
     position: "System Administrator",
     status: "active",
     lastLogin: "2023-05-01T10:30:00",
@@ -65,7 +75,7 @@ const mockUsers = [
     id: "2",
     name: "Bob Smith",
     email: "bob@example.com",
-    role: "crm_user" as UserRole,
+    role: "crm_user",
     position: "Support Representative",
     status: "active",
     lastLogin: "2023-05-02T09:15:00",
@@ -74,7 +84,7 @@ const mockUsers = [
     id: "3",
     name: "Carol Williams",
     email: "carol@example.com",
-    role: "doctor" as UserRole,
+    role: "doctor",
     position: "Cardiologist",
     status: "inactive",
     lastLogin: "2023-04-15T14:20:00",
@@ -83,7 +93,7 @@ const mockUsers = [
     id: "4",
     name: "David Miller",
     email: "david@example.com",
-    role: "marketing" as UserRole,
+    role: "marketing",
     position: "Marketing Specialist",
     status: "active",
     lastLogin: "2023-05-03T11:45:00",
@@ -92,7 +102,7 @@ const mockUsers = [
     id: "5",
     name: "Eva Rodriguez",
     email: "eva@example.com",
-    role: "crm_user" as UserRole,
+    role: "crm_user",
     position: "Customer Support Lead",
     status: "active",
     lastLogin: "2023-05-02T16:30:00",
@@ -113,11 +123,11 @@ const userFormSchema = z.object({
 });
 
 const UserManagement = () => {
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState<UserData[]>(mockUsers);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | undefined>();
   const [statusFilter, setStatusFilter] = useState<string | undefined>();
-  const [editUser, setEditUser] = useState<any>(null);
+  const [editUser, setEditUser] = useState<UserData | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
@@ -148,9 +158,13 @@ const UserManagement = () => {
   });
 
   const handleAddUser = (data: z.infer<typeof userFormSchema>) => {
-    const newUser = {
+    const newUser: UserData = {
       id: (users.length + 1).toString(),
-      ...data,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      position: data.position,
+      status: data.status,
       lastLogin: new Date().toISOString(),
     };
     setUsers([...users, newUser]);
@@ -162,7 +176,7 @@ const UserManagement = () => {
     });
   };
 
-  const handleEditUser = (user: any) => {
+  const handleEditUser = (user: UserData) => {
     setEditUser(user);
     form.reset({
       name: user.name,
@@ -175,9 +189,19 @@ const UserManagement = () => {
   };
 
   const handleUpdateUser = (data: z.infer<typeof userFormSchema>) => {
+    if (!editUser) return;
+    
     const updatedUsers = users.map((user) =>
-      user.id === editUser.id ? { ...user, ...data } : user
+      user.id === editUser.id ? { 
+        ...user, 
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        position: data.position,
+        status: data.status
+      } : user
     );
+    
     setUsers(updatedUsers);
     setAddUserDialogOpen(false);
     setEditUser(null);
@@ -194,15 +218,20 @@ const UserManagement = () => {
   };
 
   const handleDeleteUser = () => {
+    if (!userToDelete) return;
+    
     const updatedUsers = users.filter((user) => user.id !== userToDelete);
     const deletedUser = users.find((user) => user.id === userToDelete);
     setUsers(updatedUsers);
     setDeleteDialogOpen(false);
-    toast({
-      title: "User deleted",
-      description: `${deletedUser?.name} has been removed from the system`,
-      variant: "destructive",
-    });
+    
+    if (deletedUser) {
+      toast({
+        title: "User deleted",
+        description: `${deletedUser.name} has been removed from the system`,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -230,7 +259,7 @@ const UserManagement = () => {
                 <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All roles</SelectItem>
+                <SelectItem value="all">All roles</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="crm_user">CRM User</SelectItem>
                 <SelectItem value="doctor">Doctor</SelectItem>
@@ -246,7 +275,7 @@ const UserManagement = () => {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All statuses</SelectItem>
+                <SelectItem value="all">All statuses</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>
