@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +18,7 @@ import { BackNavigationHeader } from "./components/navigation/BackNavigationHead
 import { UserProvider } from "./contexts/UserContext";
 
 // Admin pages
+import UserManagement from "./pages/admin/UserManagement";
 import DoctorManagement from "./pages/admin/DoctorManagement";
 import TeamManagement from "./pages/admin/TeamManagement";
 import NotificationTemplates from "./pages/admin/NotificationTemplates";
@@ -99,6 +99,11 @@ const App = () => (
               } />
               
               {/* Admin Routes */}
+              <Route path="/admin/users" element={
+                <AppLayout>
+                  <UserManagement />
+                </AppLayout>
+              } />
               <Route path="/admin/doctors" element={
                 <AppLayout>
                   <DoctorManagement />
