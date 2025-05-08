@@ -225,13 +225,14 @@ export function SidebarNav() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     className={cn(
-                      isActive(item.url) && "bg-sidebar-accent text-white"
+                      isActive(item.url) && "bg-sidebar-accent text-white",
+                      isCollapsed && "justify-center"
                     )}
                     onClick={() => handleNavigation(item.url)}
                     tooltip={isCollapsed ? item.title : undefined}
                   >
                     <item.icon className="h-5 w-5" />
-                    <span>{item.title}</span>
+                    {!isCollapsed && <span>{item.title}</span>}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -248,13 +249,14 @@ export function SidebarNav() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={cn(
-                        isActive(item.url) && "bg-sidebar-accent text-white"
+                        isActive(item.url) && "bg-sidebar-accent text-white",
+                        isCollapsed && "justify-center"
                       )}
                       onClick={() => handleNavigation(item.url)}
                       tooltip={isCollapsed ? item.title : undefined}
                     >
                       <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
+                      {!isCollapsed && <span>{item.title}</span>}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -275,40 +277,80 @@ export function SidebarNav() {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+          <div className={cn("flex items-center gap-2", isCollapsed && "ml-auto")}>
+            {!isCollapsed ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                    >
+                      <Settings className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => switchUser("crm")}>
+                      Switch to CRM User
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchUser("doctor")}>
+                      Switch to Doctor
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchUser("marketing")}>
+                      Switch to Marketing
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchUser("admin")}>
+                      Switch to Admin
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                  onClick={handleLogout}
                 >
-                  <Settings className="h-5 w-5" />
+                  <LogOut className="h-5 w-5" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => switchUser("crm")}>
-                  Switch to CRM User
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => switchUser("doctor")}>
-                  Switch to Doctor
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => switchUser("marketing")}>
-                  Switch to Marketing
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => switchUser("admin")}>
-                  Switch to Admin
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
-              onClick={handleLogout}
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                    >
+                      <Settings className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => switchUser("crm")}>
+                      Switch to CRM User
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchUser("doctor")}>
+                      Switch to Doctor
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchUser("marketing")}>
+                      Switch to Marketing
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => switchUser("admin")}>
+                      Switch to Admin
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </SidebarFooter>
