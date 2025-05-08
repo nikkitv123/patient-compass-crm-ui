@@ -13,11 +13,14 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   Activity,
   BarChart3,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
   ClipboardList,
   Home,
   LogOut,
@@ -159,6 +162,8 @@ export function SidebarNav() {
   const { toast } = useToast();
   const { showLogoutConfirmation } = useLogoutConfirmation();
   const { currentUser, switchUser, hasPermission } = useUser();
+  const { state: sidebarState, toggleSidebar } = useSidebar();
+  const isCollapsed = sidebarState === "collapsed";
   
   // Set initial active item based on current location
   const [activeItem, setActiveItem] = useState<string>(location.pathname);
@@ -187,14 +192,29 @@ export function SidebarNav() {
   const showAdminSection = filteredAdminNavItems.length > 0;
 
   return (
-    <Sidebar>
-      <SidebarHeader className="flex items-center justify-center py-6">
+    <Sidebar collapsible={isCollapsed ? "icon" : "none"}>
+      <SidebarHeader className="flex items-center justify-between py-6 px-3">
         <div className="flex items-center">
           <Activity className="h-6 w-6 text-white" />
-          <span className="ml-2 text-xl font-bold text-white">
-            PatientCompass
-          </span>
+          {!isCollapsed && (
+            <span className="ml-2 text-xl font-bold text-white">
+              PatientCompass
+            </span>
+          )}
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+          onClick={toggleSidebar}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-5 w-5" />
+          ) : (
+            <ChevronLeft className="h-5 w-5" />
+          )}
+        </Button>
       </SidebarHeader>
 
       <SidebarContent className="px-3">
@@ -208,6 +228,7 @@ export function SidebarNav() {
                       isActive(item.url) && "bg-sidebar-accent text-white"
                     )}
                     onClick={() => handleNavigation(item.url)}
+                    tooltip={isCollapsed ? item.title : undefined}
                   >
                     <item.icon className="h-5 w-5" />
                     <span>{item.title}</span>
@@ -230,6 +251,7 @@ export function SidebarNav() {
                         isActive(item.url) && "bg-sidebar-accent text-white"
                       )}
                       onClick={() => handleNavigation(item.url)}
+                      tooltip={isCollapsed ? item.title : undefined}
                     >
                       <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
@@ -246,10 +268,12 @@ export function SidebarNav() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <UserCircle className="h-8 w-8 text-white" />
-            <div className="ml-2">
-              <div className="text-sm font-semibold text-white">{currentUser.name}</div>
-              <div className="text-xs text-sidebar-foreground/80">{currentUser.position}</div>
-            </div>
+            {!isCollapsed && (
+              <div className="ml-2">
+                <div className="text-sm font-semibold text-white">{currentUser.name}</div>
+                <div className="text-xs text-sidebar-foreground/80">{currentUser.position}</div>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <DropdownMenu>
