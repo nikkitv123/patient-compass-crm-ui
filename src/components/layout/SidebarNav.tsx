@@ -192,12 +192,12 @@ export function SidebarNav() {
   const showAdminSection = filteredAdminNavItems.length > 0;
 
   return (
-    <Sidebar collapsible={isCollapsed ? "icon" : "none"}>
+    <Sidebar collapsible={isCollapsed ? "icon" : "none"} className="transition-all duration-300 ease-in-out">
       <SidebarHeader className="flex items-center justify-between py-6 px-3">
         <div className="flex items-center">
-          <Activity className="h-6 w-6 text-white" />
+          <Activity className="h-6 w-6 text-white transition-transform duration-300 hover:scale-110" />
           {!isCollapsed && (
-            <span className="ml-2 text-xl font-bold text-white">
+            <span className="ml-2 text-xl font-bold text-white transition-opacity duration-300 ease-in-out">
               PatientCompass
             </span>
           )}
@@ -205,14 +205,14 @@ export function SidebarNav() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+          className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-colors duration-200"
           onClick={toggleSidebar}
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? (
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
           ) : (
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
           )}
         </Button>
       </SidebarHeader>
@@ -225,14 +225,15 @@ export function SidebarNav() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     className={cn(
+                      "transition-all duration-200 ease-in-out hover:translate-x-1",
                       isActive(item.url) && "bg-sidebar-accent text-white",
                       isCollapsed && "justify-center"
                     )}
                     onClick={() => handleNavigation(item.url)}
                     tooltip={isCollapsed ? item.title : undefined}
                   >
-                    <item.icon className="h-5 w-5" />
-                    {!isCollapsed && <span>{item.title}</span>}
+                    <item.icon className={cn("h-5 w-5 transition-transform duration-200", isActive(item.url) && "scale-110")} />
+                    {!isCollapsed && <span className="transition-opacity duration-300">{item.title}</span>}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -242,21 +243,27 @@ export function SidebarNav() {
 
         {showAdminSection && (
           <SidebarGroup>
-            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupLabel className={cn(
+              "transition-opacity duration-300",
+              isCollapsed && "opacity-0 h-0 overflow-hidden"
+            )}>
+              Administration
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {filteredAdminNavItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={cn(
+                        "transition-all duration-200 ease-in-out hover:translate-x-1",
                         isActive(item.url) && "bg-sidebar-accent text-white",
                         isCollapsed && "justify-center"
                       )}
                       onClick={() => handleNavigation(item.url)}
                       tooltip={isCollapsed ? item.title : undefined}
                     >
-                      <item.icon className="h-5 w-5" />
-                      {!isCollapsed && <span>{item.title}</span>}
+                      <item.icon className={cn("h-5 w-5 transition-transform duration-200", isActive(item.url) && "scale-110")} />
+                      {!isCollapsed && <span className="transition-opacity duration-300">{item.title}</span>}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -269,15 +276,18 @@ export function SidebarNav() {
       <SidebarFooter className="border-t border-sidebar-border p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <UserCircle className="h-8 w-8 text-white" />
+            <UserCircle className="h-8 w-8 text-white transition-transform duration-200 hover:scale-110" />
             {!isCollapsed && (
-              <div className="ml-2">
+              <div className="ml-2 transition-opacity duration-300">
                 <div className="text-sm font-semibold text-white">{currentUser.name}</div>
                 <div className="text-xs text-sidebar-foreground/80">{currentUser.position}</div>
               </div>
             )}
           </div>
-          <div className={cn("flex items-center gap-2", isCollapsed && "ml-auto")}>
+          <div className={cn(
+            "flex items-center gap-2 transition-all duration-300", 
+            isCollapsed && "ml-auto flex-col"
+          )}>
             {!isCollapsed ? (
               <>
                 <DropdownMenu>
@@ -285,22 +295,22 @@ export function SidebarNav() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                      className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105"
                     >
                       <Settings className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => switchUser("crm")}>
+                  <DropdownMenuContent align="end" className="animate-scale-in">
+                    <DropdownMenuItem onClick={() => switchUser("crm")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to CRM User
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("doctor")}>
+                    <DropdownMenuItem onClick={() => switchUser("doctor")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to Doctor
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("marketing")}>
+                    <DropdownMenuItem onClick={() => switchUser("marketing")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to Marketing
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("admin")}>
+                    <DropdownMenuItem onClick={() => switchUser("admin")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to Admin
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -308,7 +318,7 @@ export function SidebarNav() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                  className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105"
                   onClick={handleLogout}
                 >
                   <LogOut className="h-5 w-5" />
@@ -321,22 +331,22 @@ export function SidebarNav() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                      className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105"
                     >
                       <Settings className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => switchUser("crm")}>
+                  <DropdownMenuContent align="end" className="animate-scale-in">
+                    <DropdownMenuItem onClick={() => switchUser("crm")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to CRM User
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("doctor")}>
+                    <DropdownMenuItem onClick={() => switchUser("doctor")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to Doctor
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("marketing")}>
+                    <DropdownMenuItem onClick={() => switchUser("marketing")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to Marketing
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("admin")}>
+                    <DropdownMenuItem onClick={() => switchUser("admin")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
                       Switch to Admin
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -344,7 +354,7 @@ export function SidebarNav() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent"
+                  className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105"
                   onClick={handleLogout}
                 >
                   <LogOut className="h-5 w-5" />
