@@ -25,7 +25,13 @@ interface SortablePermissionItemProps {
 }
 
 const SortablePermissionItem = ({ permission }: SortablePermissionItemProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: permission.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: permission.id,
+    // Add the required resizeObserverConfig property
+    data: {
+      permission
+    }
+  });
   
   const style = {
     transform: CSS.Transform.toString(transform),
