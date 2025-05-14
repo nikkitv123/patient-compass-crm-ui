@@ -42,19 +42,19 @@ export function PatientSearch({ onSearch }: PatientSearchProps) {
   return (
     <form onSubmit={handleSearch} className="w-full">
       <div className="relative flex items-center">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
         <Input
           type="text"
           placeholder={searchPlaceholderMap[filters.searchBy]}
-          className="pl-10 pr-24"
+          className="pl-10 pr-24 bg-white border-gray-200 focus-visible:ring-primary"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <div className="absolute right-2 flex items-center space-x-2">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" type="button" className="h-7 w-7">
-                <Filter className="h-4 w-4" />
+              <Button variant="outline" size="icon" type="button" className="h-7 w-7 bg-white border-gray-200 hover:bg-gray-50">
+                <Filter className="h-4 w-4 text-gray-500" />
                 <span className="sr-only">Filter</span>
               </Button>
             </PopoverTrigger>

@@ -64,11 +64,11 @@ export function TopBar() {
   return (
     <div className="h-16 border-b bg-white flex items-center justify-between px-6">
       <form onSubmit={handleSearch} className="relative w-96">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
         <Input
           type="text"
           placeholder="Search patients, cases, or tasks..."
-          className="pl-10 w-full h-9"
+          className="pl-10 w-full h-9 bg-white border-gray-200 focus-visible:ring-primary"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
