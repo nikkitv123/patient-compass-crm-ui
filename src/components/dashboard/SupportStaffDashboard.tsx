@@ -159,7 +159,7 @@ export const SupportStaffDashboard = ({
   return <div className="space-y-6">
       {/* Search Bar */}
       <div className="relative w-full max-w-md mx-auto lg:mx-0">
-        <input type="text" placeholder="Search patients, cases or tasks..." className="w-full h-10 pl-10 pr-4 text-gray-900 placeholder-white-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+        <input type="text" placeholder="Search patients, cases or tasks..." className="w-full h-10 pl-10 pr-4 text-gray-900 placeholder-white-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-slate-100" />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <Activity className="w-4 h-4 text-gray-400" />
         </div>
