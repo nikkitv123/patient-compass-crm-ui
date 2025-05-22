@@ -136,9 +136,7 @@ export function SidebarNav() {
       <SidebarHeader className="flex items-center justify-between py-6 px-3">
         <div className="flex items-center">
           <Activity className="h-6 w-6 text-white transition-transform duration-300 hover:scale-110" />
-          {!isCollapsed && <span className="ml-2 text-xl font-bold text-white transition-opacity duration-300 ease-in-out">
-              PatientCompass
-            </span>}
+          {!isCollapsed && <span className="ml-2 text-xl text-white transition-opacity duration-300 ease-in-out font-bold">JIFFY HEALTHCARE</span>}
         </div>
         <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-colors duration-200" onClick={toggleSidebar} aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}>
           {isCollapsed ? <ChevronRight className="h-5 w-5 transition-transform duration-200 hover:scale-110" /> : <ChevronLeft className="h-5 w-5 transition-transform duration-200 hover:scale-110" />}
