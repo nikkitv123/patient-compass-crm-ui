@@ -1,6 +1,6 @@
 
 import { User } from "@/types/user";
-import { FrontlineStaffDashboard } from "@/components/dashboard/FrontlineStaffDashboard";
+import { DoctorDashboard } from "@/components/dashboard/DoctorDashboard";
 import { SupportStaffDashboard } from "@/components/dashboard/SupportStaffDashboard";
 import { ManagementDashboard } from "@/components/dashboard/ManagementDashboard";
 import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
@@ -14,7 +14,7 @@ export const DashboardSelector = ({ currentUser }: DashboardSelectorProps) => {
     case "admin":
       return <AdminDashboard currentUser={currentUser} />;
     case "doctor":
-      return <FrontlineStaffDashboard currentUser={currentUser} />;
+      return <DoctorDashboard currentUser={currentUser} />;
     case "marketing":
       return <ManagementDashboard currentUser={currentUser} />;
     case "crm_user":
