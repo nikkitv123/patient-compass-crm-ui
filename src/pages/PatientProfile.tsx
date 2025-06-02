@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,7 +32,8 @@ import {
   Building,
   History,
   HeartPulse,
-  IdCard,  // Using IdCard instead of ID
+  IdCard,
+  UserX,
 } from "lucide-react";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { CaseList } from "@/components/dashboard/CaseList";
@@ -77,7 +77,8 @@ import {
   FormLabel, 
   FormMessage
 } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { PatientStatusDialog } from "@/components/dashboard/PatientStatusDialog";
 
 const PatientProfile = () => {
   const { id } = useParams<{ id: string }>();
@@ -89,6 +90,8 @@ const PatientProfile = () => {
   const [isNotesDialogOpen, setIsNotesDialogOpen] = useState(false);
   const [isCreateCaseDialogOpen, setIsCreateCaseDialogOpen] = useState(false);
   const [isEditPreferencesDialogOpen, setIsEditPreferencesDialogOpen] = useState(false);
+  const [isPatientStatusDialogOpen, setIsPatientStatusDialogOpen] = useState(false);
+  const [selectedStatusAction, setSelectedStatusAction] = useState<"inactive" | "deceased" | null>(null);
 
   // Mock patient data for demonstration
   const patient = {
@@ -418,6 +421,11 @@ const PatientProfile = () => {
     setIsEditPreferencesDialogOpen(false);
   };
 
+  const handlePatientStatusChange = (action: "inactive" | "deceased") => {
+    setSelectedStatusAction(action);
+    setIsPatientStatusDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <BackNavigationHeader title="Patient Profile" />
@@ -466,6 +474,14 @@ const PatientProfile = () => {
           <Button onClick={() => setIsCreateCaseDialogOpen(true)}>
             <ClipboardList className="h-4 w-4 mr-2" />
             Create Case
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => handlePatientStatusChange("inactive")}
+            className="border-amber-200 text-amber-700 hover:bg-amber-50"
+          >
+            <UserX className="h-4 w-4 mr-2" />
+            Change Status
           </Button>
         </div>
       </div>
@@ -1236,6 +1252,13 @@ const PatientProfile = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Patient Status Dialog */}
+      <PatientStatusDialog 
+        isOpen={isPatientStatusDialogOpen} 
+        onClose={() => setIsPatientStatusDialogOpen(false)} 
+        action={selectedStatusAction} 
+      />
     </div>
   );
 };
