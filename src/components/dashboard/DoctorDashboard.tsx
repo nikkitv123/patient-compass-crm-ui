@@ -29,49 +29,82 @@ export const DoctorDashboard = ({ currentUser }: DoctorDashboardProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Welcome Header */}
+      <div className="bg-gradient-to-r from-healthcare-primary to-healthcare-accent rounded-lg p-6 text-white">
+        <h1 className="text-2xl font-bold mb-2">Welcome back, Dr. {currentUser.name}</h1>
+        <p className="text-healthcare-light opacity-90">Here's what needs your attention today</p>
+      </div>
+
       {/* Patient Search */}
-      <PatientSearch />
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h2 className="text-lg font-semibold mb-4 text-healthcare-dark">Quick Patient Access</h2>
+        <PatientSearch />
+      </div>
 
       {/* Key Metrics */}
-      <StatsCardGrid />
+      <div>
+        <h2 className="text-xl font-semibold mb-4 text-healthcare-dark">Today's Overview</h2>
+        <StatsCardGrid />
+      </div>
 
       {/* Patient Status Management */}
-      <PatientStatusManager />
+      <div>
+        <h2 className="text-xl font-semibold mb-4 text-healthcare-dark">Patient Management</h2>
+        <PatientStatusManager />
+      </div>
 
       {/* Main Content Grid */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left Column - Tasks & Appointments */}
-        <div className="space-y-6">
-          <TaskList 
-            title="Clinical Tasks" 
-            description="Urgent clinical tasks requiring attention"
-            tasks={mockTasks}
-            onTaskComplete={handleTaskComplete}
-          />
-          <AppointmentList appointments={mockAppointments} />
+        <div className="lg:col-span-1 space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-healthcare-dark">Tasks & Schedule</h3>
+            <div className="space-y-4">
+              <TaskList 
+                title="Clinical Tasks" 
+                description="Urgent clinical tasks requiring attention"
+                tasks={mockTasks}
+                onTaskComplete={handleTaskComplete}
+              />
+              <AppointmentList appointments={mockAppointments} />
+            </div>
+          </div>
         </div>
 
         {/* Middle Column - Communications & Reports */}
-        <div className="space-y-6">
-          <RecentCommunications />
-          <RecentReports />
+        <div className="lg:col-span-1 space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-healthcare-dark">Communications & Reports</h3>
+            <div className="space-y-4">
+              <RecentCommunications />
+              <RecentReports />
+            </div>
+          </div>
         </div>
 
         {/* Right Column - Protocols & Patients */}
-        <div className="space-y-6">
-          <FeedbackProtocols />
-          <PatientList
-            title="Recent Patients"
-            patients={mockPatients.slice(0, 5)}
-            onViewPatient={handleViewPatient}
-            onViewAllPatients={() => navigate('/patients')}
-          />
+        <div className="lg:col-span-1 space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-healthcare-dark">Protocols & Patients</h3>
+            <div className="space-y-4">
+              <FeedbackProtocols />
+              <PatientList
+                title="Recent Patients"
+                patients={mockPatients.slice(0, 5)}
+                onViewPatient={handleViewPatient}
+                onViewAllPatients={() => navigate('/patients')}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <QuickActions />
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-6">
+        <h2 className="text-lg font-semibold mb-4 text-healthcare-dark">Quick Actions</h2>
+        <QuickActions />
+      </div>
     </div>
   );
 };
