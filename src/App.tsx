@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +21,7 @@ import { UserProvider } from "./contexts/UserContext";
 import EHRDashboard from "./pages/EHRDashboard";
 import BillingDashboard from "./pages/BillingDashboard";
 import HRMDashboard from "./pages/HRMDashboard";
+import PharmacyManagement from "./pages/ehr/PharmacyManagement";
 
 // Admin pages
 import UserManagement from "./pages/admin/UserManagement";
@@ -134,13 +134,7 @@ const App = () => (
               } />
               <Route path="/ehr/pharmacy" element={
                 <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Pharmacy" />
-                    <h1 className="text-3xl font-bold mt-6">Pharmacy Management</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Manage medications and prescriptions
-                    </p>
-                  </div>
+                  <PharmacyManagement />
                 </AppLayout>
               } />
 

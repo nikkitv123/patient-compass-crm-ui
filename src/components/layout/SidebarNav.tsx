@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -33,7 +32,8 @@ import {
   ChevronRight,
   Stethoscope,
   CreditCard,
-  UserCog
+  UserCog,
+  Pill
 } from "lucide-react";
 
 const mainNavItems = [
