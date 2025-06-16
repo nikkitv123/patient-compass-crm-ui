@@ -1,147 +1,98 @@
 
-import { PatientSearch, PatientSearchFilters } from "@/components/patient/PatientSearch";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { PatientList } from "@/components/dashboard/PatientList";
-import { BackNavigationHeader } from "@/components/navigation/BackNavigationHeader";
-import { AddPatientDialog } from "@/components/patient/AddPatientDialog";
-import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useUser } from "@/contexts/UserContext";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Users, Plus, Search, Filter } from "lucide-react";
 
-const PatientManagement = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchFilters, setSearchFilters] = useState<PatientSearchFilters>({
-    searchBy: "all"
-  });
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { currentUser } = useUser();
-
-  const handleSearch = (query: string, filters: PatientSearchFilters) => {
-    setSearchQuery(query);
-    setSearchFilters(filters);
-    
-    toast({
-      title: "Searching for patients",
-      description: `Query: ${query} (Filter: ${filters.searchBy})`,
-    });
-    // In a real application, this would filter the patients list
-  };
-
-  // Mock data for demonstration purposes
-  const patients = [
-    {
-      id: "p1",
-      name: "Sarah Johnson",
-      crn: "CRN-12345",
-      lastInteraction: "10 minutes ago",
-      isHighRisk: true,
-    },
-    {
-      id: "p2",
-      name: "Michael Williams",
-      crn: "CRN-23456",
-      lastInteraction: "2 hours ago",
-    },
-    {
-      id: "p3",
-      name: "David Brown",
-      crn: "CRN-34567",
-      lastInteraction: "Yesterday",
-    },
-    {
-      id: "p4",
-      name: "Emily Davis",
-      crn: "CRN-45678",
-      lastInteraction: "2 days ago",
-      isVIP: true,
-    },
-    {
-      id: "p5",
-      name: "Robert Wilson",
-      crn: "CRN-56789",
-      lastInteraction: "5 days ago",
-    },
-    {
-      id: "p6",
-      name: "Jennifer Taylor",
-      crn: "CRN-67890",
-      lastInteraction: "1 week ago",
-    },
-    {
-      id: "p7",
-      name: "James Anderson",
-      crn: "CRN-78901",
-      lastInteraction: "2 weeks ago",
-      isVIP: true,
-    },
-    {
-      id: "p8",
-      name: "Patricia Martinez",
-      crn: "CRN-89012",
-      lastInteraction: "3 weeks ago",
-    },
-    {
-      id: "p9",
-      name: "John Thompson",
-      crn: "CRN-90123",
-      lastInteraction: "1 month ago",
-      isHighRisk: true,
-    },
-    {
-      id: "p10",
-      name: "Linda Garcia",
-      crn: "CRN-01234",
-      lastInteraction: "2 months ago",
-    },
-  ];
-
-  const handleViewPatient = (patientId: string) => {
-    navigate(`/patients/${patientId}`);
-  };
-
+export default function PatientManagement() {
   return (
     <div className="space-y-6">
-      <BackNavigationHeader title="Patient Management" />
-      
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Patient Management</h1>
-          <p className="text-muted-foreground mt-1">
-            Search, view, and manage patient profiles
+          <p className="text-muted-foreground">
+            Manage patient records and information
           </p>
         </div>
-        
-        {/* Only CRM users and admins can add patients */}
-        <RoleGuard allowedRoles={["admin", "crm_user"]}>
-          <AddPatientDialog />
-        </RoleGuard>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" />
+          Add New Patient
+        </Button>
       </div>
 
-      {currentUser.role === "marketing" && (
-        <Alert className="bg-yellow-50 border-yellow-200">
-          <AlertCircle className="h-4 w-4 text-yellow-600" />
-          <AlertTitle>Limited Access</AlertTitle>
-          <AlertDescription>
-            Marketing users have view-only access to patient data for reporting purposes.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <PatientSearch onSearch={handleSearch} />
-
-      <div className="bg-white rounded-lg border">
-        <PatientList
-          title="All Patients"
-          patients={patients}
-          onViewPatient={handleViewPatient}
-        />
+      {/* Search and Filter Bar */}
+      <div className="flex gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search patients by name, ID, or phone..."
+            className="pl-10"
+          />
+        </div>
+        <Button variant="outline">
+          <Filter className="h-4 w-4 mr-2" />
+          Filters
+        </Button>
       </div>
+
+      {/* Stats Overview */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">2,459</div>
+            <p className="text-xs text-muted-foreground">+12% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">New This Month</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">89</div>
+            <p className="text-xs text-muted-foreground">+5% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Cases</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">156</div>
+            <p className="text-xs text-muted-foreground">-2% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Follow-ups Due</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">23</div>
+            <p className="text-xs text-muted-foreground">Due this week</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Patient List */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Patients</CardTitle>
+          <CardDescription>
+            Latest patient records and activity
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            Patient management functionality will be implemented here
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default PatientManagement;
+}

@@ -1,10 +1,11 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   BellIcon,
   MessageCircle,
   Search,
+  User,
+  Minimize2,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -18,18 +19,19 @@ import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/contexts/UserContext";
 import { MessageDialog } from "@/components/messaging/MessageDialog";
 import { useNavigate } from "react-router-dom";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function TopBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [messageDialogOpen, setMessageDialogOpen] = useState(false);
   const [selectedRecipient, setSelectedRecipient] = useState<any>(null);
-  const { currentUser } = useUser();
+  const { currentUser, switchUser } = useUser();
+  const { toggleSidebar } = useSidebar();
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
-    // In a real application, would navigate to search results or filter current view
   };
 
   const handleOpenMessageDialog = (recipient: any) => {
@@ -40,6 +42,14 @@ export function TopBar() {
   const handleViewAllMessages = () => {
     navigate("/messages");
   };
+
+  // Mock users for switching
+  const availableUsers = [
+    { id: "admin", name: "Admin User", role: "admin" },
+    { id: "crm", name: "Dr. Jane Smith", role: "crm_user" },
+    { id: "doctor", name: "Dr. Michael Chen", role: "doctor" },
+    { id: "marketing", name: "Sarah Williams", role: "marketing" },
+  ];
 
   // Mock recipients for quick messaging
   const recentContacts = [
@@ -63,18 +73,51 @@ export function TopBar() {
 
   return (
     <div className="h-16 border-b bg-white flex items-center justify-between px-6">
-      <form onSubmit={handleSearch} className="relative w-96">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-        <Input
-          type="text"
-          placeholder="Search patients, cases, or tasks..."
-          className="pl-10 w-full h-9 bg-white border-gray-200 focus-visible:ring-primary"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </form>
+      <div className="flex items-center space-x-4">
+        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <Minimize2 className="h-5 w-5" />
+        </Button>
+
+        <form onSubmit={handleSearch} className="relative w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Input
+            type="text"
+            placeholder="Search patients, cases, or tasks..."
+            className="pl-10 w-full h-9 bg-white border-gray-200 focus-visible:ring-primary"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </form>
+      </div>
 
       <div className="flex items-center space-x-4">
+        {/* User Switcher */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-2">
+              <User className="h-4 w-4" />
+              {currentUser.name}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <div className="p-2 font-medium">Switch User</div>
+            <DropdownMenuSeparator />
+            {availableUsers.map(user => (
+              <DropdownMenuItem 
+                key={user.id}
+                className="cursor-pointer"
+                onClick={() => switchUser(user.id)}
+              >
+                <div>
+                  <p className="font-medium">{user.name}</p>
+                  <p className="text-sm text-muted-foreground capitalize">{user.role.replace('_', ' ')}</p>
+                </div>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Messages Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
@@ -98,7 +141,8 @@ export function TopBar() {
                   <p className="text-sm text-muted-foreground line-clamp-1">
                     {contact.lastMessage}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">{contact.timestamp}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{contact.timestamp}
+                  </p>
                 </div>
               </DropdownMenuItem>
             ))}
@@ -121,6 +165,7 @@ export function TopBar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* Notifications Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
