@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,11 @@ import {
   Stethoscope,
   CreditCard,
   UserCog,
-  Pill
+  Pill,
+  Bell,
+  FileEdit,
+  Clock,
+  Shield
 } from "lucide-react";
 
 const mainNavItems = [
@@ -153,6 +158,31 @@ const adminNavItems = [
     title: "Team Management",
     href: "/admin/teams",
     icon: Users,
+  },
+  {
+    title: "Notification Templates",
+    href: "/admin/notifications",
+    icon: Bell,
+  },
+  {
+    title: "Template Management",
+    href: "/admin/templates",
+    icon: FileEdit,
+  },
+  {
+    title: "Case Configuration",
+    href: "/admin/case-config",
+    icon: Briefcase,
+  },
+  {
+    title: "SLA Rules",
+    href: "/admin/sla-rules",
+    icon: Clock,
+  },
+  {
+    title: "Role Permissions",
+    href: "/admin/role-permissions",
+    icon: Shield,
   },
   {
     title: "System Settings",
