@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +17,11 @@ import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "next-themes";
 import { BackNavigationHeader } from "./components/navigation/BackNavigationHeader";
 import { UserProvider } from "./contexts/UserContext";
+
+// EHR pages
+import EHRDashboard from "./pages/EHRDashboard";
+import BillingDashboard from "./pages/BillingDashboard";
+import HRMDashboard from "./pages/HRMDashboard";
 
 // Admin pages
 import UserManagement from "./pages/admin/UserManagement";
@@ -95,6 +101,126 @@ const App = () => (
               <Route path="/reporting" element={
                 <AppLayout>
                   <Reporting />
+                </AppLayout>
+              } />
+
+              {/* EHR Routes */}
+              <Route path="/ehr" element={
+                <AppLayout>
+                  <EHRDashboard />
+                </AppLayout>
+              } />
+              <Route path="/ehr/appointments" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Appointments" />
+                    <h1 className="text-3xl font-bold mt-6">Appointment Management</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Manage patient appointments and scheduling
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+              <Route path="/ehr/lab-results" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Lab Results" />
+                    <h1 className="text-3xl font-bold mt-6">Laboratory Results</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Review and manage laboratory test results
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+              <Route path="/ehr/pharmacy" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Pharmacy" />
+                    <h1 className="text-3xl font-bold mt-6">Pharmacy Management</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Manage medications and prescriptions
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+
+              {/* Billing Routes */}
+              <Route path="/billing" element={
+                <AppLayout>
+                  <BillingDashboard />
+                </AppLayout>
+              } />
+              <Route path="/billing/invoices" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Invoices" />
+                    <h1 className="text-3xl font-bold mt-6">Invoice Management</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Create and manage patient invoices
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+              <Route path="/billing/payments" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Payments" />
+                    <h1 className="text-3xl font-bold mt-6">Payment Processing</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Process and track patient payments
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+              <Route path="/billing/claims" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Insurance Claims" />
+                    <h1 className="text-3xl font-bold mt-6">Insurance Claims</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Manage insurance claims and approvals
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+
+              {/* HRM Routes */}
+              <Route path="/hrm" element={
+                <AppLayout>
+                  <HRMDashboard />
+                </AppLayout>
+              } />
+              <Route path="/hrm/employees" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Employees" />
+                    <h1 className="text-3xl font-bold mt-6">Employee Management</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Manage employee information and profiles
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+              <Route path="/hrm/attendance" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Attendance" />
+                    <h1 className="text-3xl font-bold mt-6">Attendance Management</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Track employee attendance and time records
+                    </p>
+                  </div>
+                </AppLayout>
+              } />
+              <Route path="/hrm/payroll" element={
+                <AppLayout>
+                  <div className="p-6">
+                    <BackNavigationHeader title="Payroll" />
+                    <h1 className="text-3xl font-bold mt-6">Payroll Management</h1>
+                    <p className="text-muted-foreground mt-2">
+                      Process payroll and manage compensation
+                    </p>
+                  </div>
                 </AppLayout>
               } />
               

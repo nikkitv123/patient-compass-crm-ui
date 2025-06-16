@@ -1,242 +1,284 @@
-import { cn } from "@/lib/utils";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { Activity, BarChart3, Calendar, ChevronLeft, ChevronRight, ClipboardList, Home, LogOut, MessageCircle, Search, Settings, UserCircle, Users,
-// Admin icons
-UserCog, Shield, Bell, FileText, Megaphone, List, Clock, UserPlus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { useState } from "react";
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { useLogoutConfirmation } from "@/hooks/useLogoutConfirmation";
-import { useUser } from "@/contexts/UserContext";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-type NavItem = {
-  title: string;
-  icon: React.ElementType;
-  url: string;
-  roles?: Array<"admin" | "crm_user" | "doctor" | "marketing">;
-};
-const primaryNavItems: NavItem[] = [{
-  title: "Dashboard",
-  icon: Home,
-  url: "/",
-  roles: ["admin", "crm_user", "doctor", "marketing"]
-}, {
-  title: "Patients",
-  icon: Users,
-  url: "/patients",
-  roles: ["admin", "crm_user", "doctor"]
-}, {
-  title: "Cases",
-  icon: ClipboardList,
-  url: "/cases",
-  roles: ["admin", "crm_user"]
-}, {
-  title: "Tasks",
-  icon: Calendar,
-  url: "/tasks",
-  roles: ["admin", "crm_user"]
-}, {
-  title: "Messages",
-  icon: MessageCircle,
-  url: "/messages",
-  roles: ["admin", "crm_user", "doctor", "marketing"]
-}, {
-  title: "Reporting",
-  icon: BarChart3,
-  url: "/reporting",
-  roles: ["admin", "marketing"]
-}];
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  MessageSquare,
+  BarChart3,
+  Settings,
+  FileText,
+  Calendar,
+  DollarSign,
+  UserCheck,
+  ChevronDown,
+  ChevronRight,
+  Stethoscope,
+  CreditCard,
+  UserCog
+} from "lucide-react";
 
-// Administration items for admin users only
-const adminNavItems: NavItem[] = [{
-  title: "User Management",
-  icon: Users,
-  url: "/admin/users",
-  roles: ["admin"]
-}, {
-  title: "Doctor Management",
-  icon: UserCog,
-  url: "/admin/doctors",
-  roles: ["admin"]
-}, {
-  title: "Team Management",
-  icon: Shield,
-  url: "/admin/teams",
-  roles: ["admin"]
-}, {
-  title: "Notifications",
-  icon: Bell,
-  url: "/admin/notifications",
-  roles: ["admin"]
-}, {
-  title: "Templates",
-  icon: FileText,
-  url: "/admin/templates",
-  roles: ["admin"]
-}, {
-  title: "Case Config",
-  icon: List,
-  url: "/admin/case-config",
-  roles: ["admin"]
-}, {
-  title: "SLA Rules",
-  icon: Clock,
-  url: "/admin/sla-rules",
-  roles: ["admin"]
-}, {
-  title: "Role Permissions",
-  icon: UserPlus,
-  url: "/admin/role-permissions",
-  roles: ["admin"]
-}, {
-  title: "System Settings",
-  icon: Settings,
-  url: "/admin/settings",
-  roles: ["admin"]
-}];
+const mainNavItems = [
+  {
+    title: "Dashboard",
+    href: "/",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Patients",
+    href: "/patients",
+    icon: Users,
+  },
+  {
+    title: "Cases",
+    href: "/cases",
+    icon: Briefcase,
+  },
+  {
+    title: "Tasks",
+    href: "/tasks",
+    icon: FileText,
+  },
+  {
+    title: "Messages",
+    href: "/messages",
+    icon: MessageSquare,
+  },
+  {
+    title: "Reporting",
+    href: "/reporting",
+    icon: BarChart3,
+  },
+];
+
+const ehrNavItems = [
+  {
+    title: "EHR Dashboard",
+    href: "/ehr",
+    icon: Stethoscope,
+  },
+  {
+    title: "Appointments",
+    href: "/ehr/appointments",
+    icon: Calendar,
+  },
+  {
+    title: "Lab Results",
+    href: "/ehr/lab-results",
+    icon: FileText,
+  },
+  {
+    title: "Pharmacy",
+    href: "/ehr/pharmacy",
+    icon: UserCheck,
+  },
+];
+
+const billingNavItems = [
+  {
+    title: "Billing Dashboard",
+    href: "/billing",
+    icon: DollarSign,
+  },
+  {
+    title: "Invoices",
+    href: "/billing/invoices",
+    icon: FileText,
+  },
+  {
+    title: "Payments",
+    href: "/billing/payments",
+    icon: CreditCard,
+  },
+  {
+    title: "Insurance Claims",
+    href: "/billing/claims",
+    icon: Briefcase,
+  },
+];
+
+const hrmNavItems = [
+  {
+    title: "HR Dashboard",
+    href: "/hrm",
+    icon: UserCog,
+  },
+  {
+    title: "Employees",
+    href: "/hrm/employees",
+    icon: Users,
+  },
+  {
+    title: "Attendance",
+    href: "/hrm/attendance",
+    icon: Calendar,
+  },
+  {
+    title: "Payroll",
+    href: "/hrm/payroll",
+    icon: DollarSign,
+  },
+];
+
+const adminNavItems = [
+  {
+    title: "User Management",
+    href: "/admin/users",
+    icon: Users,
+  },
+  {
+    title: "Doctor Management",
+    href: "/admin/doctors",
+    icon: UserCheck,
+  },
+  {
+    title: "Team Management",
+    href: "/admin/teams",
+    icon: Users,
+  },
+  {
+    title: "System Settings",
+    href: "/admin/settings",
+    icon: Settings,
+  },
+];
+
 export function SidebarNav() {
-  const navigate = useNavigate();
   const location = useLocation();
-  const {
-    toast
-  } = useToast();
-  const {
-    showLogoutConfirmation
-  } = useLogoutConfirmation();
-  const {
-    currentUser,
-    switchUser,
-    hasPermission
-  } = useUser();
-  const {
-    state: sidebarState,
-    toggleSidebar
-  } = useSidebar();
-  const isCollapsed = sidebarState === "collapsed";
+  const [expandedSections, setExpandedSections] = useState({
+    ehr: false,
+    billing: false,
+    hrm: false,
+    admin: false,
+  });
 
-  // Set initial active item based on current location
-  const [activeItem, setActiveItem] = useState<string>(location.pathname);
-  const handleLogout = () => {
-    showLogoutConfirmation();
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
-  const handleNavigation = (url: string) => {
-    setActiveItem(url);
-    navigate(url);
-  };
-  const isActive = (url: string) => activeItem === url;
 
-  // Filter navigation items based on user role
-  const filteredPrimaryNavItems = primaryNavItems.filter(item => !item.roles || hasPermission(item.roles));
-  const filteredAdminNavItems = adminNavItems.filter(item => !item.roles || hasPermission(item.roles));
+  const NavLink = ({ item, isSubItem = false }: { item: any; isSubItem?: boolean }) => (
+    <Link to={item.href}>
+      <Button
+        variant={location.pathname === item.href ? "secondary" : "ghost"}
+        className={cn(
+          "w-full justify-start gap-2",
+          isSubItem && "ml-4 w-[calc(100%-1rem)]",
+          location.pathname === item.href && "bg-healthcare-primary/10 text-healthcare-primary"
+        )}
+      >
+        <item.icon className="h-4 w-4" />
+        {item.title}
+      </Button>
+    </Link>
+  );
 
-  // Only show admin section if user has access to at least one admin item
-  const showAdminSection = filteredAdminNavItems.length > 0;
-  return <Sidebar collapsible={isCollapsed ? "icon" : "none"} className="transition-all duration-300 ease-in-out">
-      <SidebarHeader className="flex items-center justify-between py-6 px-3">
-        <div className="flex items-center">
-          <Activity className="h-6 w-6 text-white transition-transform duration-300 hover:scale-110" />
-          {!isCollapsed && <span className="ml-2 text-xl text-white transition-opacity duration-300 ease-in-out font-bold">JIFFY HEALTHCARE</span>}
-        </div>
-        <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-colors duration-200" onClick={toggleSidebar} aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}>
-          {isCollapsed ? <ChevronRight className="h-5 w-5 transition-transform duration-200 hover:scale-110" /> : <ChevronLeft className="h-5 w-5 transition-transform duration-200 hover:scale-110" />}
-        </Button>
-      </SidebarHeader>
-
-      <SidebarContent className="px-[8px]">
-        <SidebarGroup className="px-0 mx-0">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {filteredPrimaryNavItems.map(item => <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className={cn("transition-all duration-200 ease-in-out hover:translate-x-1", isActive(item.url) && "bg-sidebar-accent text-white", isCollapsed && "justify-center")} onClick={() => handleNavigation(item.url)} tooltip={isCollapsed ? item.title : undefined}>
-                    <item.icon className={cn("h-5 w-5 transition-transform duration-200", isActive(item.url) && "scale-110")} />
-                    {!isCollapsed && <span className="transition-opacity duration-300">{item.title}</span>}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>)}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {showAdminSection && <SidebarGroup>
-            <SidebarGroupLabel className={cn("transition-opacity duration-300", isCollapsed && "opacity-0 h-0 overflow-hidden")}>
-              Administration
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {filteredAdminNavItems.map(item => <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton className={cn("transition-all duration-200 ease-in-out hover:translate-x-1", isActive(item.url) && "bg-sidebar-accent text-white", isCollapsed && "justify-center")} onClick={() => handleNavigation(item.url)} tooltip={isCollapsed ? item.title : undefined}>
-                      <item.icon className={cn("h-5 w-5 transition-transform duration-200", isActive(item.url) && "scale-110")} />
-                      {!isCollapsed && <span className="transition-opacity duration-300">{item.title}</span>}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>)}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>}
-      </SidebarContent>
-
-      <SidebarFooter className="border-t border-sidebar-border p-3 px-[6px]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <UserCircle className="h-8 w-8 text-white transition-transform duration-200 hover:scale-110 mx-0" />
-            {!isCollapsed && <div className="ml-2 transition-opacity duration-300">
-                <div className="text-sm font-semibold text-white">{currentUser.name}</div>
-                <div className="text-xs text-sidebar-foreground/80">{currentUser.position}</div>
-              </div>}
-          </div>
-          <div className={cn("flex items-center gap-2 transition-all duration-300", isCollapsed && "ml-auto flex-col")}>
-            {!isCollapsed ? <>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105">
-                      <Settings className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="animate-scale-in">
-                    <DropdownMenuItem onClick={() => switchUser("crm")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to CRM User
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("doctor")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to Doctor
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("marketing")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to Marketing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("admin")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to Admin
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105" onClick={handleLogout}>
-                  <LogOut className="h-5 w-5" />
-                </Button>
-              </> : <div className="flex flex-col gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105">
-                      <Settings className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="animate-scale-in">
-                    <DropdownMenuItem onClick={() => switchUser("crm")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to CRM User
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("doctor")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to Doctor
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("marketing")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to Marketing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => switchUser("admin")} className="cursor-pointer transition-colors hover:translate-x-1 duration-200">
-                      Switch to Admin
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button variant="ghost" size="icon" className="text-sidebar-foreground/80 hover:text-white hover:bg-sidebar-accent transition-all duration-200 hover:scale-105" onClick={handleLogout}>
-                  <LogOut className="h-5 w-5" />
-                </Button>
-              </div>}
+  return (
+    <ScrollArea className="h-full py-6 pl-6 pr-2">
+      <div className="space-y-4">
+        {/* Main Navigation */}
+        <div>
+          <h2 className="mb-2 px-2 text-lg font-semibold text-healthcare-dark">
+            Main
+          </h2>
+          <div className="space-y-1">
+            {mainNavItems.map((item) => (
+              <NavLink key={item.href} item={item} />
+            ))}
           </div>
         </div>
-      </SidebarFooter>
-    </Sidebar>;
+
+        <Separator />
+
+        {/* EHR Section */}
+        <div>
+          <Button
+            variant="ghost"
+            className="w-full justify-between mb-2"
+            onClick={() => toggleSection('ehr')}
+          >
+            <span className="font-semibold text-healthcare-dark">Electronic Health Records</span>
+            {expandedSections.ehr ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+          {expandedSections.ehr && (
+            <div className="space-y-1">
+              {ehrNavItems.map((item) => (
+                <NavLink key={item.href} item={item} isSubItem />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        {/* Billing Section */}
+        <div>
+          <Button
+            variant="ghost"
+            className="w-full justify-between mb-2"
+            onClick={() => toggleSection('billing')}
+          >
+            <span className="font-semibold text-healthcare-dark">Billing & Finance</span>
+            {expandedSections.billing ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+          {expandedSections.billing && (
+            <div className="space-y-1">
+              {billingNavItems.map((item) => (
+                <NavLink key={item.href} item={item} isSubItem />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        {/* HRM Section */}
+        <div>
+          <Button
+            variant="ghost"
+            className="w-full justify-between mb-2"
+            onClick={() => toggleSection('hrm')}
+          >
+            <span className="font-semibold text-healthcare-dark">Human Resources</span>
+            {expandedSections.hrm ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+          {expandedSections.hrm && (
+            <div className="space-y-1">
+              {hrmNavItems.map((item) => (
+                <NavLink key={item.href} item={item} isSubItem />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        {/* Admin Section */}
+        <div>
+          <Button
+            variant="ghost"
+            className="w-full justify-between mb-2"
+            onClick={() => toggleSection('admin')}
+          >
+            <span className="font-semibold text-healthcare-dark">Administration</span>
+            {expandedSections.admin ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+          {expandedSections.admin && (
+            <div className="space-y-1">
+              {adminNavItems.map((item) => (
+                <NavLink key={item.href} item={item} isSubItem />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </ScrollArea>
+  );
 }
