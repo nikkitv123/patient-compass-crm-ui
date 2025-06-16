@@ -2,9 +2,22 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
+  SidebarSeparator,
+} from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   LayoutDashboard,
   Users,
@@ -164,121 +177,150 @@ export function SidebarNav() {
     }));
   };
 
-  const NavLink = ({ item, isSubItem = false }: { item: any; isSubItem?: boolean }) => (
-    <Link to={item.href}>
-      <Button
-        variant={location.pathname === item.href ? "secondary" : "ghost"}
-        className={cn(
-          "w-full justify-start gap-2",
-          isSubItem && "ml-4 w-[calc(100%-1rem)]",
-          location.pathname === item.href && "bg-healthcare-primary/10 text-healthcare-primary"
-        )}
-      >
-        <item.icon className="h-4 w-4" />
-        {item.title}
-      </Button>
-    </Link>
-  );
+  const isActive = (href: string) => location.pathname === href;
 
   return (
-    <ScrollArea className="h-full py-6 pl-6 pr-2">
-      <div className="space-y-4">
+    <Sidebar className="border-r">
+      <SidebarContent>
         {/* Main Navigation */}
-        <div>
-          <h2 className="mb-2 px-2 text-lg font-semibold text-healthcare-dark">
-            Main
-          </h2>
-          <div className="space-y-1">
-            {mainNavItems.map((item) => (
-              <NavLink key={item.href} item={item} />
-            ))}
-          </div>
-        </div>
+        <SidebarGroup>
+          <SidebarGroupLabel>Main</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {mainNavItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                    <Link to={item.href}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-        <Separator />
+        <SidebarSeparator />
 
         {/* EHR Section */}
-        <div>
-          <Button
-            variant="ghost"
-            className="w-full justify-between mb-2"
-            onClick={() => toggleSection('ehr')}
-          >
-            <span className="font-semibold text-healthcare-dark">Electronic Health Records</span>
-            {expandedSections.ehr ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </Button>
-          {expandedSections.ehr && (
-            <div className="space-y-1">
-              {ehrNavItems.map((item) => (
-                <NavLink key={item.href} item={item} isSubItem />
-              ))}
-            </div>
-          )}
-        </div>
+        <SidebarGroup>
+          <Collapsible open={expandedSections.ehr} onOpenChange={() => toggleSection('ehr')}>
+            <CollapsibleTrigger asChild>
+              <SidebarGroupLabel className="cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md px-2 py-1 flex items-center justify-between">
+                Electronic Health Records
+                {expandedSections.ehr ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </SidebarGroupLabel>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenuSub>
+                  {ehrNavItems.map((item) => (
+                    <SidebarMenuSubItem key={item.href}>
+                      <SidebarMenuSubButton asChild isActive={isActive(item.href)}>
+                        <Link to={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </SidebarGroup>
 
-        <Separator />
+        <SidebarSeparator />
 
         {/* Billing Section */}
-        <div>
-          <Button
-            variant="ghost"
-            className="w-full justify-between mb-2"
-            onClick={() => toggleSection('billing')}
-          >
-            <span className="font-semibold text-healthcare-dark">Billing & Finance</span>
-            {expandedSections.billing ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </Button>
-          {expandedSections.billing && (
-            <div className="space-y-1">
-              {billingNavItems.map((item) => (
-                <NavLink key={item.href} item={item} isSubItem />
-              ))}
-            </div>
-          )}
-        </div>
+        <SidebarGroup>
+          <Collapsible open={expandedSections.billing} onOpenChange={() => toggleSection('billing')}>
+            <CollapsibleTrigger asChild>
+              <SidebarGroupLabel className="cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md px-2 py-1 flex items-center justify-between">
+                Billing & Finance
+                {expandedSections.billing ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </SidebarGroupLabel>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenuSub>
+                  {billingNavItems.map((item) => (
+                    <SidebarMenuSubItem key={item.href}>
+                      <SidebarMenuSubButton asChild isActive={isActive(item.href)}>
+                        <Link to={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </SidebarGroup>
 
-        <Separator />
+        <SidebarSeparator />
 
         {/* HRM Section */}
-        <div>
-          <Button
-            variant="ghost"
-            className="w-full justify-between mb-2"
-            onClick={() => toggleSection('hrm')}
-          >
-            <span className="font-semibold text-healthcare-dark">Human Resources</span>
-            {expandedSections.hrm ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </Button>
-          {expandedSections.hrm && (
-            <div className="space-y-1">
-              {hrmNavItems.map((item) => (
-                <NavLink key={item.href} item={item} isSubItem />
-              ))}
-            </div>
-          )}
-        </div>
+        <SidebarGroup>
+          <Collapsible open={expandedSections.hrm} onOpenChange={() => toggleSection('hrm')}>
+            <CollapsibleTrigger asChild>
+              <SidebarGroupLabel className="cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md px-2 py-1 flex items-center justify-between">
+                Human Resources
+                {expandedSections.hrm ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </SidebarGroupLabel>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenuSub>
+                  {hrmNavItems.map((item) => (
+                    <SidebarMenuSubItem key={item.href}>
+                      <SidebarMenuSubButton asChild isActive={isActive(item.href)}>
+                        <Link to={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </SidebarGroup>
 
-        <Separator />
+        <SidebarSeparator />
 
         {/* Admin Section */}
-        <div>
-          <Button
-            variant="ghost"
-            className="w-full justify-between mb-2"
-            onClick={() => toggleSection('admin')}
-          >
-            <span className="font-semibold text-healthcare-dark">Administration</span>
-            {expandedSections.admin ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </Button>
-          {expandedSections.admin && (
-            <div className="space-y-1">
-              {adminNavItems.map((item) => (
-                <NavLink key={item.href} item={item} isSubItem />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </ScrollArea>
+        <SidebarGroup>
+          <Collapsible open={expandedSections.admin} onOpenChange={() => toggleSection('admin')}>
+            <CollapsibleTrigger asChild>
+              <SidebarGroupLabel className="cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md px-2 py-1 flex items-center justify-between">
+                Administration
+                {expandedSections.admin ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </SidebarGroupLabel>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenuSub>
+                  {adminNavItems.map((item) => (
+                    <SidebarMenuSubItem key={item.href}>
+                      <SidebarMenuSubButton asChild isActive={isActive(item.href)}>
+                        <Link to={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }
