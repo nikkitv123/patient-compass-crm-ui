@@ -20,8 +20,8 @@ import {
   Paperclip,
   Send,
   Inbox,
-  Sent,
-  Drafts
+  Edit,
+  FileText
 } from "lucide-react";
 import { useState } from "react";
 
@@ -215,7 +215,7 @@ export default function Email() {
                   className="w-full justify-start"
                   onClick={() => setSelectedFolder("sent")}
                 >
-                  <Sent className="h-4 w-4 mr-2" />
+                  <Send className="h-4 w-4 mr-2" />
                   Sent
                 </Button>
                 <Button
@@ -223,7 +223,7 @@ export default function Email() {
                   className="w-full justify-start"
                   onClick={() => setSelectedFolder("drafts")}
                 >
-                  <Drafts className="h-4 w-4 mr-2" />
+                  <Edit className="h-4 w-4 mr-2" />
                   Drafts
                 </Button>
               </div>
