@@ -11,6 +11,7 @@ import { RecentCommunications } from "./RecentCommunications";
 import { PatientStatusManager } from "./PatientStatusManager";
 import { RecentReports } from "./RecentReports";
 import { FeedbackProtocols } from "./FeedbackProtocols";
+import { FloatingNotepad } from "./FloatingNotepad";
 import { mockTasks, mockAppointments, mockPatients } from "@/data/mockDashboardData";
 
 interface DoctorDashboardProps {
@@ -105,6 +106,9 @@ export const DoctorDashboard = ({ currentUser }: DoctorDashboardProps) => {
         <h2 className="text-lg font-semibold mb-4 text-healthcare-dark">Quick Actions</h2>
         <QuickActions />
       </div>
+
+      {/* Floating Notepad - only visible for doctors */}
+      <FloatingNotepad />
     </div>
   );
 };
