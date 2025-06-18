@@ -1,4 +1,3 @@
-
 import { TaskList } from "@/components/dashboard/TaskList";
 import { PatientList } from "@/components/dashboard/PatientList";
 import { User } from "@/types/user";
@@ -11,6 +10,7 @@ import { RecentCommunications } from "./RecentCommunications";
 import { PatientStatusManager } from "./PatientStatusManager";
 import { RecentReports } from "./RecentReports";
 import { FeedbackProtocols } from "./FeedbackProtocols";
+import { DoctorNotesCard } from "./DoctorNotesCard";
 import { FloatingNotepad } from "./FloatingNotepad";
 import { mockTasks, mockAppointments, mockPatients } from "@/data/mockDashboardData";
 
@@ -53,6 +53,12 @@ export const DoctorDashboard = ({ currentUser }: DoctorDashboardProps) => {
       <div>
         <h2 className="text-xl font-semibold mb-4 text-healthcare-dark">Patient Management</h2>
         <PatientStatusManager />
+      </div>
+
+      {/* Doctor Notes Section */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4 text-healthcare-dark">Doctor Notes</h2>
+        <DoctorNotesCard />
       </div>
 
       {/* Main Content Grid */}
