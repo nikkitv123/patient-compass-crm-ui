@@ -11,6 +11,7 @@ import CaseManagement from "./pages/CaseManagement";
 import CaseDetail from "./pages/CaseDetail";
 import TaskManagement from "./pages/TaskManagement";
 import Messages from "./pages/Messages";
+import Email from "./pages/Email";
 import Reporting from "./pages/Reporting";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "next-themes";
@@ -96,6 +97,11 @@ const App = () => (
               <Route path="/messages" element={
                 <AppLayout>
                   <Messages />
+                </AppLayout>
+              } />
+              <Route path="/email" element={
+                <AppLayout>
+                  <Email />
                 </AppLayout>
               } />
               <Route path="/reporting" element={

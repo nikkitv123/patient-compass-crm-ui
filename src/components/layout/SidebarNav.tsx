@@ -23,6 +23,7 @@ import {
   Users,
   Briefcase,
   MessageSquare,
+  Mail,
   BarChart3,
   Settings,
   FileText,
@@ -66,6 +67,11 @@ const mainNavItems = [
     title: "Messages",
     href: "/messages",
     icon: MessageSquare,
+  },
+  {
+    title: "Email",
+    href: "/email",
+    icon: Mail,
   },
   {
     title: "Reporting",
