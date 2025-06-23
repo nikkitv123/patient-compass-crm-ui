@@ -1,9 +1,22 @@
+
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useUser } from "@/contexts/UserContext";
 import { NavLink, useLocation } from "react-router-dom";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   Users,
@@ -105,66 +118,95 @@ export const SidebarNav = () => {
   ] as NavSection[];
 
   return (
-    <div className="flex flex-col space-y-6 w-full">
-      {navigationItems.map((section, index) => (
-        <div key={index} className="space-y-1">
-          <h4 className="text-sm font-semibold text-gray-500">{section.title}</h4>
-          <div className="space-y-1">
-            {section.items.map((item, itemIndex) => (
-              <NavLink
-                key={itemIndex}
-                to={item.href}
-                className={({ isActive }) =>
-                  cn(
-                    "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100 hover:text-gray-900",
-                    isActive
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-700"
-                  )
-                }
-              >
-                <item.icon className="mr-2 h-4 w-4" />
-                {item.name}
-              </NavLink>
-            ))}
+    <Sidebar className="border-r">
+      <SidebarHeader className="border-b p-4">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
+            <Activity className="h-5 w-5 text-primary-foreground" />
           </div>
+          <span className="font-semibold text-lg">HealthCare CRM</span>
         </div>
-      ))}
+      </SidebarHeader>
 
-      {isAdmin && (
-        <Collapsible className="w-full">
-          <CollapsibleTrigger className="flex items-center justify-between w-full rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none">
-            <span>Admin Panel</span>
-            <ChevronDown className="h-4 w-4 shrink-0 ml-1" />
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 pl-4">
-            {adminNavigationItems.map((section, index) => (
-              <div key={index} className="space-y-1">
-                <h4 className="text-sm font-semibold text-gray-500">{section.title}</h4>
-                <div className="space-y-1">
-                  {section.items.map((item, itemIndex) => (
-                    <NavLink
-                      key={itemIndex}
-                      to={item.href}
-                      className={({ isActive }) =>
-                        cn(
-                          "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-100 hover:text-gray-900",
-                          isActive
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-700"
-                        )
-                      }
-                    >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {item.name}
-                    </NavLink>
+      <SidebarContent className="p-2">
+        {navigationItems.map((section, index) => (
+          <SidebarGroup key={index}>
+            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 py-2">
+              {section.title}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item, itemIndex) => (
+                  <SidebarMenuItem key={itemIndex}>
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.href}
+                        className={({ isActive }) =>
+                          cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors w-full",
+                            isActive
+                              ? "bg-primary text-primary-foreground"
+                              : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                          )
+                        }
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.name}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+
+        {isAdmin && (
+          <SidebarGroup>
+            <Collapsible className="w-full">
+              <CollapsibleTrigger asChild>
+                <SidebarGroupLabel className="flex items-center justify-between w-full rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                  <span className="text-xs font-semibold uppercase tracking-wider">Admin Panel</span>
+                  <ChevronDown className="h-4 w-4" />
+                </SidebarGroupLabel>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarGroupContent className="pl-2">
+                  {adminNavigationItems.map((section, index) => (
+                    <SidebarGroup key={index}>
+                      <SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-2 py-1">
+                        {section.title}
+                      </SidebarGroupLabel>
+                      <SidebarMenu>
+                        {section.items.map((item, itemIndex) => (
+                          <SidebarMenuItem key={itemIndex}>
+                            <SidebarMenuButton asChild>
+                              <NavLink
+                                to={item.href}
+                                className={({ isActive }) =>
+                                  cn(
+                                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors w-full",
+                                    isActive
+                                      ? "bg-primary text-primary-foreground"
+                                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                                  )
+                                }
+                              >
+                                <item.icon className="h-4 w-4" />
+                                {item.name}
+                              </NavLink>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </SidebarGroup>
                   ))}
-                </div>
-              </div>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-    </div>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroup>
+        )}
+      </SidebarContent>
+    </Sidebar>
   );
 };

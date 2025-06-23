@@ -10,11 +10,11 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex h-screen w-full overflow-hidden bg-background">
+      <div className="flex h-screen w-full bg-background">
         <SidebarNav />
         <SidebarInset className="flex flex-col flex-1">
           <TopBar />
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 overflow-auto p-0">
             {children}
           </main>
         </SidebarInset>
