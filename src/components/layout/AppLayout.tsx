@@ -12,9 +12,9 @@ export function AppLayout({ children }: AppLayoutProps) {
     <SidebarProvider defaultOpen={true}>
       <div className="flex h-screen w-full overflow-hidden bg-background">
         <SidebarNav />
-        <SidebarInset className="flex flex-col">
+        <SidebarInset className="flex flex-col flex-1">
           <TopBar />
-          <main className="flex-1 overflow-auto p-6 animate-fade-in">
+          <main className="flex-1 overflow-auto">
             {children}
           </main>
         </SidebarInset>

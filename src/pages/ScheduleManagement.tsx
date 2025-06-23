@@ -117,23 +117,23 @@ export default function ScheduleManagement() {
   };
 
   return (
-    <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <div className="space-y-6 p-6 bg-background min-h-screen">
       {/* Header Section */}
       <div className="flex justify-between items-start">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Schedule Management
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-muted-foreground">
             Manage your appointments and tasks in one unified calendar view
           </p>
         </div>
         <div className="flex gap-3">
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg">
+          <Button>
             <Plus className="h-4 w-4 mr-2" />
             Add Appointment
           </Button>
-          <Button variant="outline" className="border-blue-200 hover:bg-blue-50 shadow-sm">
+          <Button variant="outline">
             <Plus className="h-4 w-4 mr-2" />
             Add Task
           </Button>
@@ -141,7 +141,7 @@ export default function ScheduleManagement() {
       </div>
 
       {/* Controls Section */}
-      <Card className="shadow-sm border-blue-100">
+      <Card>
         <CardContent className="p-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-6">
@@ -150,12 +150,12 @@ export default function ScheduleManagement() {
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentWeek(subWeeks(currentWeek, 1))}
-                  className="h-9 w-9 p-0 hover:bg-blue-50"
+                  className="h-9 w-9 p-0"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <div className="bg-white rounded-lg px-4 py-2 border border-blue-100 shadow-sm">
-                  <span className="font-semibold text-gray-800 text-lg">
+                <div className="bg-muted rounded-lg px-4 py-2 border">
+                  <span className="font-semibold text-foreground">
                     {format(weekDays[0], 'MMM d')} - {format(weekDays[6], 'MMM d, yyyy')}
                   </span>
                 </div>
@@ -163,7 +163,7 @@ export default function ScheduleManagement() {
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentWeek(addWeeks(currentWeek, 1))}
-                  className="h-9 w-9 p-0 hover:bg-blue-50"
+                  className="h-9 w-9 p-0"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -172,7 +172,6 @@ export default function ScheduleManagement() {
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentWeek(new Date())}
-                className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
               >
                 <Calendar className="h-4 w-4 mr-2" />
                 Today
@@ -181,14 +180,14 @@ export default function ScheduleManagement() {
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className="h-4 w-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search appointments..." 
-                  className="w-64 border-blue-200 focus:border-blue-400" 
+                  className="w-64" 
                 />
               </div>
               <Select value={viewMode} onValueChange={(value: 'week' | 'day') => setViewMode(value)}>
-                <SelectTrigger className="w-40 border-blue-200">
+                <SelectTrigger className="w-40">
                   <Eye className="h-4 w-4 mr-2" />
                   <SelectValue />
                 </SelectTrigger>
@@ -203,13 +202,13 @@ export default function ScheduleManagement() {
       </Card>
 
       {/* Schedule Grid */}
-      <Card className="shadow-lg border-0 overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <CardTitle className="flex items-center gap-3 text-xl">
-            <CalendarDays className="h-6 w-6" />
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <CalendarDays className="h-5 w-5" />
             Weekly Schedule
           </CardTitle>
-          <CardDescription className="text-blue-100">
+          <CardDescription>
             Your appointments and tasks for the week
           </CardDescription>
         </CardHeader>
@@ -217,33 +216,33 @@ export default function ScheduleManagement() {
           <div className="overflow-x-auto">
             <div className="grid grid-cols-8 min-w-[800px]">
               {/* Time column header */}
-              <div className="bg-gray-50 border-b border-r border-gray-200 p-4 text-center">
-                <Clock className="h-5 w-5 mx-auto text-gray-500 mb-1" />
-                <span className="text-sm font-semibold text-gray-700">Time</span>
+              <div className="bg-muted border-b border-r p-4 text-center">
+                <Clock className="h-5 w-5 mx-auto text-muted-foreground mb-1" />
+                <span className="text-sm font-semibold text-foreground">Time</span>
               </div>
               
               {/* Day headers */}
               {weekDays.map((day) => (
                 <div 
                   key={day.toISOString()} 
-                  className={`p-4 text-center border-b border-r border-gray-200 ${
+                  className={`p-4 text-center border-b border-r ${
                     isToday(day) 
-                      ? 'bg-gradient-to-b from-blue-100 to-blue-50 border-blue-300' 
-                      : 'bg-gray-50'
+                      ? 'bg-primary/10 border-primary/20' 
+                      : 'bg-muted'
                   }`}
                 >
-                  <div className={`text-sm font-medium ${isToday(day) ? 'text-blue-700' : 'text-gray-600'}`}>
+                  <div className={`text-sm font-medium ${isToday(day) ? 'text-primary' : 'text-muted-foreground'}`}>
                     {format(day, 'EEE')}
                   </div>
                   <div className={`text-2xl font-bold mt-1 ${
                     isToday(day) 
-                      ? 'text-blue-600' 
-                      : 'text-gray-800'
+                      ? 'text-primary' 
+                      : 'text-foreground'
                   }`}>
                     {format(day, 'd')}
                   </div>
                   {isToday(day) && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mx-auto mt-2"></div>
+                    <div className="w-2 h-2 bg-primary rounded-full mx-auto mt-2"></div>
                   )}
                 </div>
               ))}
@@ -252,8 +251,8 @@ export default function ScheduleManagement() {
               {timeSlots.map((timeSlot) => (
                 <>
                   {/* Time label */}
-                  <div key={`time-${timeSlot}`} className="bg-gray-50 p-3 border-r border-b border-gray-200 text-center">
-                    <span className="text-sm font-medium text-gray-700">{timeSlot}</span>
+                  <div key={`time-${timeSlot}`} className="bg-muted p-3 border-r border-b text-center">
+                    <span className="text-sm font-medium text-foreground">{timeSlot}</span>
                   </div>
                   
                   {/* Day cells */}
@@ -262,8 +261,8 @@ export default function ScheduleManagement() {
                     return (
                       <div 
                         key={`${day.toISOString()}-${timeSlot}`} 
-                        className={`p-2 border-r border-b border-gray-200 min-h-[80px] hover:bg-gray-50 transition-colors ${
-                          isToday(day) ? 'bg-blue-25' : 'bg-white'
+                        className={`p-2 border-r border-b min-h-[80px] hover:bg-muted/50 transition-colors ${
+                          isToday(day) ? 'bg-primary/5' : 'bg-background'
                         }`}
                       >
                         {items.map((item) => (
@@ -271,8 +270,8 @@ export default function ScheduleManagement() {
                             key={item.id}
                             className={`mb-2 p-3 rounded-lg text-xs cursor-pointer hover:shadow-md transition-all duration-200 border ${
                               item.type === 'appointment' 
-                                ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 hover:from-blue-100 hover:to-indigo-100' 
-                                : 'bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 hover:from-purple-100 hover:to-pink-100'
+                                ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' 
+                                : 'bg-purple-50 border-purple-200 hover:bg-purple-100'
                             }`}
                           >
                             <div className="flex items-center gap-2 mb-2">
@@ -281,10 +280,10 @@ export default function ScheduleManagement() {
                               ) : (
                                 <CheckSquare className="h-3 w-3 text-purple-600" />
                               )}
-                              <span className="font-semibold text-gray-800 truncate flex-1">{item.title}</span>
+                              <span className="font-semibold text-foreground truncate flex-1">{item.title}</span>
                             </div>
                             {item.patient && (
-                              <div className="text-gray-600 truncate mb-2 text-xs">
+                              <div className="text-muted-foreground truncate mb-2 text-xs">
                                 👤 {item.patient.name}
                               </div>
                             )}
@@ -305,7 +304,7 @@ export default function ScheduleManagement() {
                               )}
                             </div>
                             {item.duration && (
-                              <div className="text-xs text-gray-500 mt-1">
+                              <div className="text-xs text-muted-foreground mt-1">
                                 ⏱️ {item.duration} mins
                               </div>
                             )}
@@ -323,68 +322,64 @@ export default function ScheduleManagement() {
 
       {/* Today's Schedule Summary */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="shadow-lg border-0 overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
+        <Card>
+          <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Users className="h-5 w-5" />
               Today's Appointments
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              {scheduleItems.filter(item => item.type === 'appointment').map((appointment) => (
-                <div key={appointment.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl hover:shadow-md transition-all">
-                  <div>
-                    <div className="font-semibold text-gray-800">{appointment.title}</div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      🕒 {appointment.time} • ⏱️ {appointment.duration} mins
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={`${getStatusColor(appointment.status, appointment.type)} border`}>
-                      {appointment.status}
-                    </Badge>
-                    <Button variant="outline" size="sm" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
-                      View
-                    </Button>
+          <CardContent className="space-y-4">
+            {scheduleItems.filter(item => item.type === 'appointment').map((appointment) => (
+              <div key={appointment.id} className="flex items-center justify-between p-4 bg-muted rounded-lg hover:shadow-md transition-all">
+                <div>
+                  <div className="font-semibold text-foreground">{appointment.title}</div>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    🕒 {appointment.time} • ⏱️ {appointment.duration} mins
                   </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex items-center gap-3">
+                  <Badge className={`${getStatusColor(appointment.status, appointment.type)} border`}>
+                    {appointment.status}
+                  </Badge>
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg border-0 overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-600 text-white">
+        <Card>
+          <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <CheckSquare className="h-5 w-5" />
               Today's Tasks
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              {scheduleItems.filter(item => item.type === 'task').map((task) => (
-                <div key={task.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl hover:shadow-md transition-all">
-                  <div>
-                    <div className="font-semibold text-gray-800">{task.title}</div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      🕒 {task.time} • ⏱️ {task.duration} mins
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={`${getPriorityColor(task.priority || 'medium')} border`}>
-                      {task.priority}
-                    </Badge>
-                    <Badge className={`${getStatusColor(task.status, task.type)} border`}>
-                      {task.status}
-                    </Badge>
-                    <Button variant="outline" size="sm" className="border-purple-300 text-purple-700 hover:bg-purple-50">
-                      View
-                    </Button>
+          <CardContent className="space-y-4">
+            {scheduleItems.filter(item => item.type === 'task').map((task) => (
+              <div key={task.id} className="flex items-center justify-between p-4 bg-muted rounded-lg hover:shadow-md transition-all">
+                <div>
+                  <div className="font-semibold text-foreground">{task.title}</div>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    🕒 {task.time} • ⏱️ {task.duration} mins
                   </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex items-center gap-3">
+                  <Badge className={`${getPriorityColor(task.priority || 'medium')} border`}>
+                    {task.priority}
+                  </Badge>
+                  <Badge className={`${getStatusColor(task.status, task.type)} border`}>
+                    {task.status}
+                  </Badge>
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </div>
