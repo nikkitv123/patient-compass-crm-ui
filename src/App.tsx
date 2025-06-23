@@ -1,55 +1,48 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppLayout } from "./components/layout/AppLayout";
-import Dashboard from "./pages/Dashboard";
-import PatientManagement from "./pages/PatientManagement";
-import PatientProfile from "./pages/PatientProfile";
-import CaseManagement from "./pages/CaseManagement";
-import CaseDetail from "./pages/CaseDetail";
-import TaskManagement from "./pages/TaskManagement";
-import Messages from "./pages/Messages";
-import Email from "./pages/Email";
-import Reporting from "./pages/Reporting";
-import NotFound from "./pages/NotFound";
-import { ThemeProvider } from "next-themes";
-import { BackNavigationHeader } from "./components/navigation/BackNavigationHeader";
-import { UserProvider } from "./contexts/UserContext";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Index from '@/pages/Index';
+import Dashboard from '@/pages/Dashboard';
+import PatientManagement from '@/pages/PatientManagement';
+import PatientProfile from '@/pages/PatientProfile';
+import CaseManagement from '@/pages/CaseManagement';
+import CaseDetail from '@/pages/CaseDetail';
+import TaskManagement from '@/pages/TaskManagement';
+import CreateTask from '@/pages/task/CreateTask';
+import ViewTask from '@/pages/task/ViewTask';
+import EditTask from '@/pages/task/EditTask';
+import Messages from '@/pages/Messages';
+import Email from '@/pages/Email';
+import EHRDashboard from '@/pages/EHRDashboard';
+import BillingDashboard from '@/pages/BillingDashboard';
+import HRMDashboard from '@/pages/HRMDashboard';
+import PharmacyManagement from '@/pages/PharmacyManagement';
+import Reporting from '@/pages/Reporting';
+import PowerBIReporting from '@/pages/PowerBIReporting';
+import UserManagement from '@/pages/admin/UserManagement';
+import TeamManagement from '@/pages/admin/TeamManagement';
+import DoctorManagement from '@/pages/admin/DoctorManagement';
+import RolePermissionManager from '@/pages/admin/RolePermissionManager';
+import CaseConfig from '@/pages/admin/CaseConfig';
+import SLARules from '@/pages/admin/SLARules';
+import NotificationTemplates from '@/pages/admin/NotificationTemplates';
+import SystemSettings from '@/pages/admin/SystemSettings';
+import NotFound from '@/pages/NotFound';
+import AppLayout from '@/components/layout/AppLayout';
+import { UserProvider } from '@/contexts/UserContext';
+import { QueryClient } from 'react-query';
+import { Toaster } from "@/components/ui/toaster"
+import RoleGuard from '@/components/auth/RoleGuard';
+import ScheduleManagement from "@/pages/ScheduleManagement";
 
-// EHR pages
-import EHRDashboard from "./pages/EHRDashboard";
-import BillingDashboard from "./pages/BillingDashboard";
-import HRMDashboard from "./pages/HRMDashboard";
-import PharmacyManagement from "./pages/ehr/PharmacyManagement";
-
-// Admin pages
-import UserManagement from "./pages/admin/UserManagement";
-import DoctorManagement from "./pages/admin/DoctorManagement";
-import TeamManagement from "./pages/admin/TeamManagement";
-import NotificationTemplates from "./pages/admin/NotificationTemplates";
-import CaseConfig from "./pages/admin/CaseConfig";
-import SLARules from "./pages/admin/SLARules";
-import SystemSettings from "./pages/admin/SystemSettings";
-import RolePermissionManager from "./pages/admin/RolePermissionManager";
-
-import CreateTask from "./pages/task/CreateTask";
-import EditTask from "./pages/task/EditTask";
-import ViewTask from "./pages/task/ViewTask";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <UserProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+function App() {
+  return (
+    <Router>
+      <UserProvider>
+        <QueryClient>
+          <div className="min-h-screen bg-background">
             <Routes>
-              <Route path="/" element={
+              <Route path="/" element={<Index />} />
+              <Route path="/dashboard" element={
                 <AppLayout>
                   <Dashboard />
                 </AppLayout>
@@ -94,6 +87,11 @@ const App = () => (
                   <EditTask />
                 </AppLayout>
               } />
+              <Route path="/schedule" element={
+                <AppLayout>
+                  <ScheduleManagement />
+                </AppLayout>
+              } />
               <Route path="/messages" element={
                 <AppLayout>
                   <Messages />
@@ -104,186 +102,103 @@ const App = () => (
                   <Email />
                 </AppLayout>
               } />
-              <Route path="/reporting" element={
-                <AppLayout>
-                  <Reporting />
-                </AppLayout>
-              } />
-
-              {/* EHR Routes */}
               <Route path="/ehr" element={
                 <AppLayout>
                   <EHRDashboard />
                 </AppLayout>
               } />
-              <Route path="/ehr/appointments" element={
-                <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Appointments" />
-                    <h1 className="text-3xl font-bold mt-6">Appointment Management</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Manage patient appointments and scheduling
-                    </p>
-                  </div>
-                </AppLayout>
-              } />
-              <Route path="/ehr/lab-results" element={
-                <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Lab Results" />
-                    <h1 className="text-3xl font-bold mt-6">Laboratory Results</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Review and manage laboratory test results
-                    </p>
-                  </div>
-                </AppLayout>
-              } />
-              <Route path="/ehr/pharmacy" element={
-                <AppLayout>
-                  <PharmacyManagement />
-                </AppLayout>
-              } />
-
-              {/* Billing Routes */}
               <Route path="/billing" element={
                 <AppLayout>
                   <BillingDashboard />
                 </AppLayout>
               } />
-              <Route path="/billing/invoices" element={
-                <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Invoices" />
-                    <h1 className="text-3xl font-bold mt-6">Invoice Management</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Create and manage patient invoices
-                    </p>
-                  </div>
-                </AppLayout>
-              } />
-              <Route path="/billing/payments" element={
-                <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Payments" />
-                    <h1 className="text-3xl font-bold mt-6">Payment Processing</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Process and track patient payments
-                    </p>
-                  </div>
-                </AppLayout>
-              } />
-              <Route path="/billing/claims" element={
-                <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Insurance Claims" />
-                    <h1 className="text-3xl font-bold mt-6">Insurance Claims</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Manage insurance claims and approvals
-                    </p>
-                  </div>
-                </AppLayout>
-              } />
-
-              {/* HRM Routes */}
               <Route path="/hrm" element={
                 <AppLayout>
                   <HRMDashboard />
                 </AppLayout>
               } />
-              <Route path="/hrm/employees" element={
+              <Route path="/pharmacy" element={
                 <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Employees" />
-                    <h1 className="text-3xl font-bold mt-6">Employee Management</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Manage employee information and profiles
-                    </p>
-                  </div>
+                  <PharmacyManagement />
                 </AppLayout>
               } />
-              <Route path="/hrm/attendance" element={
+              <Route path="/reporting" element={
                 <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Attendance" />
-                    <h1 className="text-3xl font-bold mt-6">Attendance Management</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Track employee attendance and time records
-                    </p>
-                  </div>
+                  <Reporting />
                 </AppLayout>
               } />
-              <Route path="/hrm/payroll" element={
+              <Route path="/powerbi" element={
                 <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Payroll" />
-                    <h1 className="text-3xl font-bold mt-6">Payroll Management</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Process payroll and manage compensation
-                    </p>
-                  </div>
+                  <PowerBIReporting />
                 </AppLayout>
               } />
-              
+
               {/* Admin Routes */}
               <Route path="/admin/users" element={
                 <AppLayout>
-                  <UserManagement />
-                </AppLayout>
-              } />
-              <Route path="/admin/doctors" element={
-                <AppLayout>
-                  <DoctorManagement />
+                  <RoleGuard allowedRoles="admin">
+                    <UserManagement />
+                  </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/teams" element={
                 <AppLayout>
-                  <TeamManagement />
+                  <RoleGuard allowedRoles="admin">
+                    <TeamManagement />
+                  </RoleGuard>
                 </AppLayout>
               } />
-              <Route path="/admin/notifications" element={
+              <Route path="/admin/doctors" element={
                 <AppLayout>
-                  <NotificationTemplates />
+                  <RoleGuard allowedRoles="admin">
+                    <DoctorManagement />
+                  </RoleGuard>
                 </AppLayout>
               } />
-              <Route path="/admin/templates" element={
+              <Route path="/admin/permissions" element={
                 <AppLayout>
-                  <div className="p-6">
-                    <BackNavigationHeader title="Template Management" />
-                    <h1 className="text-3xl font-bold mt-6">Templates</h1>
-                    <p className="text-muted-foreground mt-2">
-                      Manage task and feedback templates
-                    </p>
-                  </div>
+                  <RoleGuard allowedRoles="admin">
+                    <RolePermissionManager />
+                  </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/case-config" element={
                 <AppLayout>
-                  <CaseConfig />
+                  <RoleGuard allowedRoles="admin">
+                    <CaseConfig />
+                  </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/sla-rules" element={
                 <AppLayout>
-                  <SLARules />
+                  <RoleGuard allowedRoles="admin">
+                    <SLARules />
+                  </RoleGuard>
+                </AppLayout>
+              } />
+              <Route path="/admin/notifications" element={
+                <AppLayout>
+                  <RoleGuard allowedRoles="admin">
+                    <NotificationTemplates />
+                  </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/settings" element={
                 <AppLayout>
-                  <SystemSettings />
+                  <RoleGuard allowedRoles="admin">
+                    <SystemSettings />
+                  </RoleGuard>
                 </AppLayout>
               } />
-              <Route path="/admin/role-permissions" element={
-                <AppLayout>
-                  <RolePermissionManager />
-                </AppLayout>
-              } />
-              
+
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </UserProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+            <Toaster />
+          </div>
+        </QueryClient>
+      </UserProvider>
+    </Router>
+  );
+}
 
 export default App;
