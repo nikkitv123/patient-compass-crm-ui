@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -15,7 +16,7 @@ import Email from '@/pages/Email';
 import EHRDashboard from '@/pages/EHRDashboard';
 import BillingDashboard from '@/pages/BillingDashboard';
 import HRMDashboard from '@/pages/HRMDashboard';
-import PharmacyManagement from '@/pages/PharmacyManagement';
+import PharmacyManagement from '@/pages/ehr/PharmacyManagement';
 import Reporting from '@/pages/Reporting';
 import PowerBIReporting from '@/pages/PowerBIReporting';
 import UserManagement from '@/pages/admin/UserManagement';
@@ -27,18 +28,20 @@ import SLARules from '@/pages/admin/SLARules';
 import NotificationTemplates from '@/pages/admin/NotificationTemplates';
 import SystemSettings from '@/pages/admin/SystemSettings';
 import NotFound from '@/pages/NotFound';
-import AppLayout from '@/components/layout/AppLayout';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { UserProvider } from '@/contexts/UserContext';
-import { QueryClient } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster"
-import RoleGuard from '@/components/auth/RoleGuard';
+import { RoleGuard } from '@/components/auth/RoleGuard';
 import ScheduleManagement from "@/pages/ScheduleManagement";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <Router>
       <UserProvider>
-        <QueryClient>
+        <QueryClientProvider client={queryClient}>
           <div className="min-h-screen bg-background">
             <Routes>
               <Route path="/" element={<Index />} />
@@ -136,56 +139,56 @@ function App() {
               {/* Admin Routes */}
               <Route path="/admin/users" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <UserManagement />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/teams" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <TeamManagement />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/doctors" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <DoctorManagement />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/permissions" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <RolePermissionManager />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/case-config" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <CaseConfig />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/sla-rules" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <SLARules />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/notifications" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <NotificationTemplates />
                   </RoleGuard>
                 </AppLayout>
               } />
               <Route path="/admin/settings" element={
                 <AppLayout>
-                  <RoleGuard allowedRoles="admin">
+                  <RoleGuard allowedRoles={["admin"]}>
                     <SystemSettings />
                   </RoleGuard>
                 </AppLayout>
@@ -195,7 +198,7 @@ function App() {
             </Routes>
             <Toaster />
           </div>
-        </QueryClient>
+        </QueryClientProvider>
       </UserProvider>
     </Router>
   );

@@ -42,10 +42,10 @@ interface NavSection {
 }
 
 export const SidebarNav = () => {
-  const { user } = useUser();
+  const { currentUser } = useUser();
   const location = useLocation();
   
-  const isAdmin = user?.role === "admin";
+  const isAdmin = currentUser?.role === "admin";
   
   const navigationItems = [
     {
